@@ -1,4 +1,4 @@
-![logo](/cover.jpeg)
+![logo](/cover.jpg)
 <!-- 背景色 -->
 
 # 游驹
