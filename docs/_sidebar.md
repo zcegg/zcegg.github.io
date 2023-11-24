@@ -1,8 +1,7 @@
 * [首页](README)
-* [指南](/guid)
 
-* 前端技术1
-  * [javascript](/01/javascript/)
-  * [前端运维](/01/maintenance/)
-  * [nodejs](/01/nodejs/)
-* 后端技术1
+* 前端技术
+  * [javascript](/FrontEnd/javascript/)
+  * [nodejs](/FrontEnd/nodejs/)
+  * [前端运维](/FrontEnd/maintenance/)
+* 后端技术
