@@ -1,7 +1,6 @@
 * [首页](README)
 
-* 前端技术
-  * [javascript](/FrontEnd/javascript/)
-  * [nodejs](/FrontEnd/nodejs/)
-  * [前端运维](/FrontEnd/maintenance/)
+* TypeScript
+  * [为什么是TS](/TypeScript/whyTypeScript/)
+  * [TS语法细节](/TypeScript/SyntaxDetails/)
 * 后端技术
