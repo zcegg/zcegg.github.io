@@ -63,7 +63,7 @@ function greet(name: string, age: number): string {
 
 使用这些方法我们可以在 JavaScript 中引入类型注释或静态类型检查，并在开发时提高代码的可读性和可维护性。显然，当前我们推荐的是TypeScript。
 
-## 认识 TypeScript
+## 认识TypeScript
 TypeScript是一种由Microsoft开发的开源编程语言，它是JavaScript的超集，这意味着任何有效的JavaScript代码都是有效的TypeScript代码。TypeScript通过在JavaScript的基础上添加静态类型、接口、泛型等功能，从而提供了更强大的开发工具和更丰富的语言特性
 
 **一、静态类型系统**  
@@ -125,5 +125,70 @@ TypeScript对于大型项目的支持更加出色，它提供了模块化、命�
 
 总的来说，使用TypeScript进行开发可以提高JavaScript代码的可维护性、可读性和可靠性，使得开发者能够更轻松地构建和维护大型应用程序。
 
-## Tsc 编译 TypeScript
+## 编译TypeScript
 
+当前我们已知道了，虽然开发时我们编写的是 TS 代码，但是最终在浏览器上运行的还是JS代码。所以我们需要一个将 TS转为JS 的编译环境。我们有多种编译手段，他们适用于不同的场景
+
+**一、常见编译**
+
+1. tsc编译器：直接编译某个ts文件为js，然后可选择运行
+2. ts-node： 在 node 环境下直接运行某个 ts 文件
+3. 工程化配置：在项目中基于 webpack 进行相应的工程化配置，自动将ts转为浏览器可运行代码
+4. 其它
+
+**二、基础环境**
+
+无论采用哪种操作来编译 TS 代码，我们都需要配置一些基础的环境
+
+ **01 安装 nodejs 与 npm**：TypeScript依赖于Node.js环境，因此首先需要安装Node.js。您可以从Node.js官方网站下载安装程序，选择适合您操作系统的版本
+ 
+ **02 安装 TypeScript**：在 node 安装完成之后，执行 `npm install -g typescript` 来全局安装 tpyescript，此时我们就具有了一个全局命令 `tsc` ，它就可以用来编译某个 ts 文件。
+
+之后我们就可以采用不同的方式来编译 TS 代码了。
+
+**三、tsc编译**
+1. 创建 ts 文件
+
+```javascript
+// app.ts
+function greet(name: string): string {
+    return "Hello, " + name + "!";
+}
+
+let result = greet("TypeScript");
+console.log(result);
+```
+2. 编译 TypeScript 文件
+
+```javascript
+tsc app.ts
+```
+3. 运行 JavaScript 文件
+
+```javascript
+node app.js
+```
+
+**四、ts-node运行TS**
+
+如果说我们想要查看某个 TS 文件运行后的结果都需要经历 tsc 编译 + node 运行两个大的步骤，那就太麻烦了。所以在开发和学习阶段我们可以通过第三方的工具包来简化这个操作
+
+1. 安装 ts-node
+
+```javascript
+// 全局安装 ts-node 包
+npm install ts-node -g
+// ts-node 依赖下述两个包也需要安装
+npm install tslib @types/node -g
+```
+2. 运行 ts 脚本
+
+
+```javascript
+// 在控制台中使用命令运行指定的文件
+ts-node math.ts
+```
+
+**五、工程化配置**
+
+当下前端项目开发都会基于 webpack 或者 vite 等工具搭建一套工程化环境，在这个过程中我们可以安装相应的 loader 来识别和处理 ts 文件，最后通过相应的命令执行项目的打包，此时得到的就是可直接运行的 js 文件。这个操作，我们放在后面进行描述，语法熟悉阶段，我们使用 ts-node 来完成编译工作就够用了。
