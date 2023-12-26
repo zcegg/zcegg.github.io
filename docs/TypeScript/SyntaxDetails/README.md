@@ -186,3 +186,129 @@ type MyType = typeof myVariable;
 // 直接使用上述的类型别名即可
 let myValue: MyType = { x: 30, y: 40 }; // 合法
 ```
+
+## 接口使用
+
+在 TypeScript 中，接口（Interface）用于定义对象的结构，包括属性的名称和类型。接口可以用于描述对象的形状、函数的参数和返回值等。
+
+**01 基本语法**
+
+在下面的代码中，`Point` 是一个接口，表示具有 `x` 和 `y` 属性的点类型。`myPoint` 是一个符合 `Point` 接口定义的对象
+
+```javascript
+// 定义接口：采用 interface 关键字
+interface Point {
+  x: number;
+  y: number;
+}
+
+// 使用接口：约束类型
+let myPoint: Point = { x: 10, y: 20 };
+```
+
+**02 可选属性**
+
+接口中的属性可以标记为可选，使用 `?` 符号，我们在之前已经见到过了
+
+```javascript
+interface Person {
+  name: string;
+  age?: number; // 可选属性
+}
+
+// 可以不传递 age 属性
+let person1: Person = { name: "Alice" };
+// 可以传递 age 属性
+let person2: Person = { name: "Bob", age: 30 };
+```
+
+**03 只读属性**
+
+接口中的属性可以标记为只读，使用 `readonly` 关键字
+
+```javascript
+// 问号在属性的后面
+// readonly 在属性的前面
+interface Config {
+  readonly apiKey: string;
+  endpoint: string;
+}
+
+let config: Config = { apiKey: "abc123", endpoint: "/api" };
+// config.apiKey = "newKey"; // Error: 无法分配到 "apiKey" ，因为它是只读属性。
+```
+
+**04 接口与函数类型**
+
+接口也可以用于描述函数类型，在函数类型中我们会再次见到。下面的语法我们也称之为叫调用签名
+
+```javascript
+
+// 定义一个接口，描述函数时采用 ():返回值的 语法结构
+interface GreetFunction {
+  (name: string): string;
+}
+
+let greet: GreetFunction = function (name) {
+  return `Hello, ${name}!`;
+};
+```
+
+**05 索引属性**
+
+接口可以描述对象的可索引属性，支持字符串和数字索引（只支持这两种）
+
+```javascript
+interface StringArray {
+  // 索引的类型是 number ，对应的值类型是 string
+  [index: number]: string;
+}
+
+// 用 StringArray 来约束变量 myArray 
+// 赋值的时候是[]，它的 index 是number 。值是 string
+let myArray: StringArray = ["one", "two", "three"];
+
+// 取出的值是 string 类型，合法
+let firstItem: string = myArray[0];
+```
+
+
+**06 继承接口**
+
+接口可以通过 `extends` 关键字继承其它接口
+
+```javascript
+// 定义一个接口 Shape
+interface Shape {
+  color: string;
+}
+
+// 使用 关键字 extends 让 Square 来继承 Shape接口
+interface Square extends Shape {
+  sideLength: number;
+}
+
+// 赋值的时候发现，必须设置 color 属性，否则语法报错
+let square: Square = { color: "red", sideLength: 10 };
+```
+
+**07 实现接口**
+
+接口可以被类实现，从而确保类拥有接口定义的属性和方法。关于 TS 中的类，在后面还会详细说明
+
+```javascript
+// 定义一个接口 Clock，包含 currentTime key ，及 setTime 函数
+interface Clock {
+  currentTime: Date;
+  setTime(d: Date): void;
+}
+
+// 定义一个类叫 Wallclock ，通过关键字实现 implements 来实现 Clock 接口
+class WallClock implements Clock {
+  currentTime: Date = new Date();
+
+  setTime(d: Date): void {
+    this.currentTime = d;
+  }
+}
+```
