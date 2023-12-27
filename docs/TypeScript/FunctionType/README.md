@@ -150,4 +150,153 @@ const add: (x: number, y: number) => number = (x, y) => x + y;
 
 在 TypeScript 中，函数调用签名是用于描述函数类型的一种方式，它指定了函数的参数类型和返回值类型，函数调用签名非常适合用于定义回调用函数的类型、定义接口中的函数类型，或者在类型别名中指定函数类型。
 
-**01 函数调用签名的基本结构**
+**01 基本函数调用签名**
+
+一个基本的函数调用签名包括参数列表和返回值类型
+
+```javascript
+// (...args:any[]) => returnVal
+// 将来哪个变量被 GreetFunction 约束，则说明它是可调用的
+type GreetFunction = (name: string) => string;
+```
+
+**02 接口中的调用签名**
+
+我们可以在接口中定义函数调用签名，这在定义类似于API的结构时非常有用。
+
+```javascript
+// 定义了一个接口 AddFunction
+// 它定义了一个调用签名，注意这与上面的语法格式不太相同
+// (...args:any[]):returnValue
+interface AddFunction {
+  (a: number, b: number): number;
+}
+
+const add: AddFunction = (a, b) => a + b;
+```
+
+**03 调用签名中的参数**
+
+在函数中可以使用的可选参数、默认参数、剩余参数语法都可以在调用签名中直接使用。
+
+```javascript
+// 可选参数和默认参数
+type GreetFunction = (name: string, greeting?: string) => string;
+
+const greet: GreetFunction = (name, greeting = "Hello") => `${greeting}, ${name}`;
+
+// 类型别名语法：剩余参数
+type BuildNameFunction = (firstName: string, ...restOfName: string[]) => string;
+
+// 接口语法：剩余参数
+interface BuildNameFunction {
+  (firstName: string, ...restOfName: string[]): string;
+}
+
+const buildName: BuildNameFunction = (firstName, ...restOfName) => {
+  return firstName + " " + restOfName.join(" ");
+};
+```
+
+**04 泛型函数的调用签名**
+
+泛型也可以用于函数调用签名中，从而提供更高的灵活性
+
+```javascript
+// 明确的调用签名是 (...args:any[]) => returnVal
+// 配合泛型就是 <T>(arg:T)=> T
+type IdentityFunction = <T>(arg: T) => T;
+
+const identity: IdentityFunction = <T>(arg: T) => arg;
+```
+
+**05 高级语法**
+
+函数调用签名适用于定义复杂的函数类型，例如在定义回调函数或将函数作为参数传递时
+
+```javascript
+
+// 01 定义一个类型别名叫 CallbackFunction ，通过调用签名来声明
+// 02 调用签名的参数语法和之前一样，联合类型，可选，剩余，默认值等
+type CallbackFunction = (err: Error | null, response: string) => void;
+
+// 此后我们将 CallbackFunction 做为一个类型来约束某个回调函数
+function fetchData(callback: CallbackFunction) {
+    // ...
+}
+```
+
+## 函数构造签名
+
+在 TypeScript 中，函数构造签名用于描述一个`对象或类的构造函数`的类型。它指定了构造函数的参数类型和返回类型（通常是类的实例类型）。这种签名在定义接口或类型别名时特别有用，尤其是当我们在处理类和更高级的抽象时。
+
+**01 构造签名基本语法**
+
+在接口中，我们可以定义一个构造签名，这表明该接口可以被用作构造函数
+
+在下面的代码中 `ClockConstructor` 接口定义了一个构造签名，它接收两个参数 `hour` `minute`，并返回一个 `ClockInterface` 类型的对象
+
+```javascript
+// 调用签名可以通过 type 或 interface 来实现
+// 构造签名的语法主要在于多了一个 new ，表示可以当做构造函数用
+interface ClockConstructor {
+    new (hour: number, minute: number): ClockInterface;
+}
+
+interface ClockInterface {
+    tick(): void;
+}
+
+function createClock(ctor: ClockConstructor, hour: number, minute: number): ClockInterface {
+    return new ctor(hour, minute);
+}
+```
+
+**02 类实现构造签名**
+
+构造签名本质上就是说明某个类型可以被执行 new 操作，所以直接通过类型来定义 constructor 函数是一样的效果
+
+下面的代码中 `DigitalClock` 和 `AnalogClock` 类都实现了 `ClockInterface` 接口，并且它们的构造函数符合 `ClockConstructor`的构造签名
+
+```javascript
+class DigitalClock implements ClockInterface {
+    constructor(h: number, m: number) { /* ... */ }
+    tick() { console.log("beep beep"); }
+}
+
+class AnalogClock implements ClockInterface {
+    constructor(h: number, m: number) { /* ... */ }
+    tick() { console.log("tick tock"); }
+}
+
+let digital = createClock(DigitalClock, 12, 17);
+let analog = createClock(AnalogClock, 7, 32);
+```
+
+**03 构造签名和类型别名**
+
+同样，我们也可以使用类型别名来定义构造签名。格式上的区别仍然是 ():void 和 ()=>void
+
+```javascript
+type ClockConstructor = new (hour: number, minute: number) => ClockInterface;
+```
+
+**04 泛型构造签名**
+
+构造签名也可以包含泛型参数，这使得签名更加灵活
+
+```javascript
+interface Constructor<T> {
+  new (...args: any[]): T;
+}
+
+class SomeClass {
+  constructor(public name: string) { /* ... */ }
+}
+
+function createInstance<T>(C: Constructor<T>, ...args: any[]): T {
+  return new C(...args);
+}
+
+let instance = createInstance(SomeClass, "Test");
+```
