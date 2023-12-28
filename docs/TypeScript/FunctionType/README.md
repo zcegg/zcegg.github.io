@@ -442,4 +442,64 @@ type GreetFunction = (greeting: string, name: string) => string;
 const greet: GreetFunction = (greeting = "Hello", name) => `${greeting}, ${name}`;
 ```
 
-## 
+## 剩余参数
+
+函数的剩余参数（Rest Parameters）允许我们将一个不定量的参数作为一个数组。这在处理多个参数，特别是参数数量不确定时非常有用。
+
+**01 剩余参数基本语法**
+
+剩余参数通过在参数名称前添加 `...` 来表示，这表明这个参数将收集所有剩余的传递给函数的参数
+
+```javascript
+
+// restOfName 是一个类型为 string[] 的剩余参数，我们可以传递任意数量的字符串参数给 buildName 函数
+function buildName(firstName: string, ...restOfName: string[]): string {
+  return firstName + " " + restOfName.join(" ");
+}
+```
+
+**02 剩余参数与其它参数**
+
+剩余参数可以与其他参数一起使用，但是必须放在参数列表的最后。其实目前来看，参数总计就四种：必填参数、可选参数、默认值参数、剩余参数。推荐在使用的时候就按着这种排序进行设置
+
+```javascript
+function printInfo(message: string, ...tags: string[]) {
+  console.log(message, tags);
+}
+```
+
+**03 函数重载与剩余参数**
+
+在使用函数重载时，剩余参数应在每个重载签名中保持一致
+
+```javascript
+function foo(...args: string[]): void;
+function foo(...args: number[]): void;
+
+// 实现时剩余参数的类型要兼容所有的重载的定义，否则就无法做到类型兼容
+function foo(...args: any[]) {
+  // 实现部分
+}
+```
+
+**04 泛型和剩余参数**
+
+剩余参数也可以与泛型一起使用
+
+```javascript
+// 调用 mergeArrays 时可以传入具体的 T 类型。
+// 这里的语法就是要求调用时传入任意个由 T 类型组成的 array 类型
+// 因为是剩余参数，所以任意个 array 又组成了一个新的 array
+// 所以 arrays 就是 [[], [], []]
+function mergeArrays<T>(...arrays: T[][]): T[] {
+  return arrays.flat();
+}
+
+// 我们调用 mergeArrays 函数并传入三个数字类型的数组，函数返回一个新的数组，它包含所有传入数组的元素。由于我们传递的是 number 类型的数组，所以T会被推断为 number 类型
+const array1 = [1, 2, 3];
+const array2 = [4, 5, 6];
+const array3 = [7, 8, 9];
+
+const mergedArray = mergeArrays(array1, array2, array3);
+console.log(mergedArray); // 输出: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+```
