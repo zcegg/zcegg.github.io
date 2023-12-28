@@ -503,3 +503,132 @@ const array3 = [7, 8, 9];
 const mergedArray = mergeArrays(array1, array2, array3);
 console.log(mergedArray); // 输出: [1, 2, 3, 4, 5, 6, 7, 8, 9]
 ```
+
+## 函数重载
+
+函数重载是一种机制，这种机制让我们可以多次声明同一个函数名，但是他们具有不同的参数类型或参数数量。这样我们的函数就可以依据不同的参数类型或数量来执行不同的操作。
+
+**01 重载签名**
+
+首先，我们需要声明重载的签名，这些签名定义了函数的不同调用方式。注意，这些签名只是声明，不包含具体的实现
+
+```javascript
+// add 函数有两个重载，一个接受两个number 类型的参数，另一个接受两个string 类型的参数
+function add(a: number, b: number): number;
+function add(a: string, b: string): string;
+```
+
+**02 实现签名**
+
+有了重载签名之后，我们就可以实现他们。此时我们需要提供一个兼容所有重载签名的实现。
+
+实现签名通常具有更通用的参数类型，`以涵盖所有重载的情况`。重载签名则定义了函数对外暴露的具体接口，它们是可见的部分
+
+```javascript
+
+// 定义重载签名
+function add(a: number, b: number): number;
+function add(a: string, b: string): string;
+
+// 实现重载签名
+// 在实现的时候，一定要兼容所有的重载，这就要求我们想办法做到类型兼容
+// add 方法我们也称为叫重载函数
+function add(a: number | string, b: number | string): number | string {
+  // 这里做类型守卫，让值在使用的时候是某一种更具体的类型
+  if (typeof a === "number" && typeof b === "number") {
+      return a + b;
+  } else if (typeof a === "string" && typeof b === "string") {
+      return a.concat(b);
+  }
+  throw new Error("Invalid arguments");
+}
+```
+
+**03 调用重载函数**
+
+调用重载函数时，TS 会依据传递的参数类型选择合适的重载签名
+
+```javascript
+// 推断出两个 number 类型
+let result1 = add(10, 20); // 使用第一个重载，返回 number
+// 推断出两个 string 类型
+let result2 = add("Hello, ", "world!"); // 使用第二个重载，返回 string
+```
+
+**04 参数个数的重载**
+
+重载不仅可以依据参数的类型不同，也可以基于参数个数的不同
+
+```javascript
+// 下面代码中定义了三个重载签名，他们分别接收不同的参数个数
+// 将来再实现重载的时候可以通过参数个数来区别
+function greet(name: string): string;
+function greet(name: string, greeting: string): string;
+function greet(name: string, greeting?: string): string {
+  return `${greeting || "Hello"}, ${name}`;
+}
+```
+
+**05 函数重载的应用**
+
+有了函数重载的机制之后，同一个函数名可以有多个不同的实现，每个实现依据不同的参数类型或参数个数执行不同的操作。这在创建具有多种用途的函数时特别有用，尤其是在类型检查和自动补全等方面有额外的好处。
+
+假设我们有一个 `formatDate` 函数，它可以接受不同类型的参数：一个 `Date` 对象，或 年、月、日这三个单独的数字。
+
+```javascript
+// 01 定义函数重载签名，接收不同的类型 与参数个数
+function formatDate(date: Date): string;
+function formatDate(year: number, month: number, day: number): string;
+
+// 02 实现重载签名：重载函数
+// 实现时一定要兼容所有的重载签名，特别是类型
+// 如果参数个数不同，只是类型不同，那么使用联合类型即可解决兼容问题
+// 如果参数个数和类型都不相同，则需要使用联合类型 与 可选参数来解决兼容问题
+function formatDate(dateOrYear: Date | number, month?: number, day?: number): string {
+  // 通过类型守卫来明确具体的类型
+  if (dateOrYear instanceof Date) {
+    return dateOrYear.toISOString().substring(0, 10);
+  } else {
+    return `${dateOrYear}-${month!}-${day!}`;
+  }
+}
+
+// 03 使用重载函数
+const date1 = formatDate(new Date()); // 传入 Date 对象
+const date2 = formatDate(2023, 4, 5); // 传入年、月、日
+
+console.log(date1); // 输出类似 "2023-04-05"
+console.log(date2); // 输出 "2023-4-5"
+```
+
+**06 泛型与函数重载**
+
+有些时候使用泛型来代替函数重载可以让代码更简洁，同时保留了灵活性和类型安全性。
+
+假设我们有一个函数 `wrapInArray`，它的功能就是将一个单一的元素或者多个元素包装成数组。
+
+```javascript
+// 函数重载版本
+function wrapInArray(element: number): number[];
+function wrapInArray(element: string): string[];
+function wrapInArray(element: any): any[] {
+  return [element];
+}
+```
+
+在泛型版本中，我们定义一个泛型函数 `wrapInArray<T>`，其中`T`是一个类型变量。这个函数接受一个类型为 `T` 的参数。并返回一个类型为 `T[]` 的数组。之后我们就可以用不同的类型调用这个泛型函数
+
+```javascript
+// 泛型版本
+function wrapInArray<T>(element: T): T[] {
+  return [element];
+}
+```
+
+在这些调用中， TS 依据传入的参数类型自动推断出泛型类型 `T` 的具体类型。
+
+```javascript
+let numberArray = wrapInArray(5); // 类型为 number[]
+let stringArray = wrapInArray("hello"); // 类型为 string[]
+let booleanArray = wrapInArray(true); // 类型为 boolean[]
+```
