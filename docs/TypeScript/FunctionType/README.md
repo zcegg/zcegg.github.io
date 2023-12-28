@@ -300,3 +300,72 @@ function createInstance<T>(C: Constructor<T>, ...args: any[]): T {
 
 let instance = createInstance(SomeClass, "Test");
 ```
+
+## 可选参数
+
+函数的可选参数允许我们在调用函数时有选择的省略这些参数，这个操作提供了更大的灵活性，同时保持了类型安全。
+
+**01 定义可选参数**
+
+在 TS 中，我们可以通过在参数名称后面添加一个 `?` 来定义一个可选参数
+
+```javascript
+// greeting 是一个可选参数，如果在调用 greet 函数时不提供 greeting 参数，它的值将是 undefined
+function greet(name: string, greeting?: string) {
+  return `${greeting || "Hello"}, ${name}`;
+}
+```
+
+**02 可选参数位置**
+
+可选参数必须位于必须参数之后，将一个可选参数置于必须参数之前会导致编译错误
+
+```javascript
+// 错误：可选参数不能位于必需参数之前
+function greet(greeting?: string, name: string) {
+  // ...
+}
+```
+
+**03 使用默认参数**
+
+作为一种替代可选参数的方式，我们可以为函数参数提供一个默认值。如果调用时未提供该参数，将使用其默认值
+
+使用默认参数时，该参数将自动变为可选，但与明确标记为可选的参数不同，如果未提供值，它将使用默认值而非 `undefined`
+
+```javascript
+function greet(name: string, greeting: string = "Hello") {
+  return `${greeting}, ${name}`;
+}
+```
+
+**04 可选参数与类型推断**
+
+当使用可选参数时，TS 会自动将参数类型推断为 `原类型|undefined`。例如，如果一个参数被定义为 `string | undefined`，那么我们可以将它标记为可选
+
+```javascript
+function greet(name: string, greeting?: string) {
+  // greeting 的类型是 'string | undefined'
+}
+```
+
+**05 可选参数与剩余参数结合**
+
+可选参数可以与剩余参数结合使用，但同样的，所有可选参数必须位于剩余参数之前。
+
+```javascript
+function buildName(firstName: string, lastName?: string, ...titles: string[]) {
+  // ...
+}
+```
+
+**06 可选回调函数**
+
+对于回调函数，我们也可以将其作为可选参数
+
+```javascript
+function loadData(callback?: () => void) {
+    // ...
+  callback?.();
+}
+```
