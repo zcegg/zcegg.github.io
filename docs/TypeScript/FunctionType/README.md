@@ -369,3 +369,77 @@ function loadData(callback?: () => void) {
   callback?.();
 }
 ```
+
+## 参数默认值
+
+函数参数可以有默认值，这意味着当调用函数时，如果没有提供某个参数，那么将使用该参数的默认值。这增加了函数的灵活性，同时保待了类型安全。
+
+**01 定义默认参数**
+
+```javascript
+// 使用默认值之后 greeting 就自动转为可选参数
+// 如果调用时不传入，则使用默认值而非 undefined
+function greet(name: string, greeting: string = "Hello") {
+  return `${greeting}, ${name}`;
+}
+```
+
+**02 默认参数的类型推断**
+
+默认参数不需要显式的定义类型，类型将从默认值自动推断出来
+
+```javascript
+// value 参数具有默认值 empty ，无须显式的注解为 any 类型。它可以自动推断
+function createArray(length: number, value: any = "empty") {
+  // ...
+}
+```
+
+**03 默认参数后的必须参数**
+
+在 JS 和 TS 中，可以在有默认值的参数后面放置没有默认值的参数，但是这样的参数只能通过明确传递  `undefined` 来使用它的默认值，所以实际开发中，我们建议还是将有默认值参数放在必填参数的后面
+
+```javascript
+// greeting 是一个有默认值的参数，语法上允许我们在后面放置必填参数
+function greet(greeting: string = "Hello", name: string) {
+  return `${greeting}, ${name}`;
+}
+
+greet(undefined, "Alice"); // 正确
+greet("Hi", "Alice");      // 正确
+// 这样操作就相当于将 greeting 赋值为 Alice 而name 没有赋值
+greet("Alice");         // 错误：第二个参数没有提供
+```
+
+**04 默认值与可选参数**
+
+虽然默认值在调用时是可选的，但在 TS 中，它们与明确标记为可选的参数（使用 `?`） 是不同的。默认参数在没有提供时使用默认值，而可选参数如果没有设置则使用 `undefined`
+
+```javascript
+// lastName 有默认值参数，默认传为可选
+// 有默认值参数无须注解类型，默认会进行推断
+// 如果调用时没有传递会使用默认值，即使我们传递了 undefined
+function buildName(firstName: string, lastName = "Smith") {
+  // ...
+}
+
+buildName("Alice");        // 正确，lastName 将是 "Smith"
+buildName("Alice", undefined); // 正确，lastName 仍然是 "Smith"
+buildName("Alice", null);     // 错误，null 不是 string 类型
+```
+
+**05 函数签名与默认参数**
+
+在类型别名或接口中定义函数签名时，不能在签名中指定参数的默认值。相反，所有参数都被认为是必须需的。
+
+```javascript
+// 使用类型别名，创建了一个函数调用签名，来实现一个函数类型
+// 定义调用签名时，它的参数不能指定默认值，都是必须的
+// 但是在实现调用签名的时候可以设置默认值
+type GreetFunction = (greeting: string, name: string) => string;
+
+// 实现时可以提供默认参数值
+const greet: GreetFunction = (greeting = "Hello", name) => `${greeting}, ${name}`;
+```
+
+## 
