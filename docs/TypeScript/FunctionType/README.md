@@ -632,3 +632,117 @@ let numberArray = wrapInArray(5); // 类型为 number[]
 let stringArray = wrapInArray("hello"); // 类型为 string[]
 let booleanArray = wrapInArray(true); // 类型为 boolean[]
 ```
+
+## 函数中的 `this`
+
+在 TS 中，正确处理函数中的 `this` 关键字是非常重要的，尤其是在类方法和回调函数中。 `this` 的行为在 TS 中与 JavaScript 类似，但 TS 提供了额外的类型检查和注解功能。
+
+**01 类和对象方法中的 this**
+
+在类的方法中，`this` 自动指向类的实例
+
+```javascript
+class MyClass {
+  // 下面的 this 自动指向类的实例
+  myMethod() {
+    console.log(this); // 'this' 指向 MyClass 的一个实例
+  }
+}
+```
+
+**02 箭头函数中的 this**
+
+箭头函数不绑定 `this`， 它们捕获定义时所在的上下文的 `this` 值
+
+```javascript
+  class MyClass{
+    myProperty = 'value'
+
+    myMethod = () => {
+      // this 捕获 MyClass 实例
+      console.log(this.myProperty)
+    }
+  }
+```
+
+**03 this 参数**
+
+TS 允许我们在函数定义时的参数列表中显式声明 `this` 类型，以指定函数预期的 `this` 类型。
+
+```javascript
+// 这个 this 并不会被当做真的参数在调用时被传递，专门用来指定 this 的类型
+function myFunction(this: MyClass, param: number) {
+  console.log(this.myProperty); // 'this' 被指定为 MyClass 类型
+}
+```
+
+**04 回调函数中的 this**
+
+在回调函数中，`this` 的值可能会丢失上下文。为此，我们可以使用箭头函数或 `bind` 方法来绑定 `this`
+
+```javascript
+class MyClass{
+  registerCallback(callback: ()=> void){
+    callback()
+  }
+  myMethod(){
+    this.registerCallback(() => {
+      // 使用箭头函数来保持 「this」上下文
+      console.log(this)
+    })
+  }
+}
+```
+
+**05 this 类型守卫**
+
+TS 允许在方法中使用 `this` 作为类型守卫
+
+```javascript
+class MyClass {
+  isReady: boolean = false;
+
+  // 允许在参数列表中的第一个位置给 this 指定类型
+  run(this: MyClass) {
+    // 守卫就可以理解为在进入xxx逻辑之前，检查一下类型
+    if (this.isReady) {
+        // ...
+    }
+  }
+}
+```
+
+**06 this 和 重载**
+
+TS 不允许在重载签名中改变 this 的类型，`this`类型必须在实现签名中统一声明
+
+```javascript
+  class MyClass{
+    doSomething(this: MyClass, arg:number):void
+    doSomething(this: MyClass, arg:string):void
+
+    // 重载函数、重载实现
+    doSomething(arg: number|string):void{
+      // 具体的逻辑
+    }
+  }
+```
+
+**07 使用 `bind` `call` `apply`**
+
+我们可以使用 `bind` `call` `apply`方法来显式地设置函数的 `this`上下文
+
+```javascript
+function myFunction() {
+  console.log(this);
+}
+
+const myContext = { value: "A" };
+
+// 返回一个绑定 this 之后的函数
+const boundFunction = myFunction.bind(myContext);
+
+boundFunction(); // 'this' 现在指向 myContext
+```
+
+

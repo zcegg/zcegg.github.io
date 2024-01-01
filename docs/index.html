@@ -13,6 +13,11 @@
       rel="stylesheet"
       href="//cdn.jsdelivr.net/npm/docsify/themes/vue.css"
     />
+    <link
+      rel="stylesheet"
+      href="//cdn.jsdelivr.net/npm/prismjs/themes/prism.css"
+    />
+    <script src="//cdn.jsdelivr.net/npm/prismjs/prism.min.js"></script>
     <style type="text/css">
       .markdown-section > p {
         line-height: 36px;
@@ -33,10 +38,16 @@
         onlyCover: true,
         alias: {
           '/.*/_sidebar.md': '/_sidebar.md'
+        },
+        copyCode: {
+          buttonText: 'Copy to clipboard',
+          errorText: 'Error',
+          successText: 'Copied'
         }
       }
     </script>
     <!-- Docsify v4 -->
     <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docsify-copy-code@latest/dist/docsify-copy-code.min.js"></script>
   </body>
 </html>

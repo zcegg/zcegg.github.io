@@ -5,4 +5,6 @@
   * [语法与类型](/TypeScript/SyntaxAndType/)
   * [语法细节](/TypeScript/SyntaxDetails/)
   * [函数类型](/TypeScript/FunctionType/)
+  * [面向对象](/TypeScript/ObjectOriented/)
+  * [泛型编程](/TypeScript/GenericProgramming/)
 * 后端技术
