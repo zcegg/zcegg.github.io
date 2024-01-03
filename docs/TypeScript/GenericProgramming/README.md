@@ -578,3 +578,100 @@ interface Pair<K, V> {
 
 let item: Pair<number, string> = { key: 1, value: "value" };
 ```
+
+## 映射类型
+
+映射类型是一种高级类型，允许我们依据一个已有的类型创建一个新的类型，其中每个属性都被转换成新的形式。这是一种强大的类型转换机制，用于从现有模型生成新的模型。
+
+**01 基本映射类型**
+
+映射类型基于一个旧的类型，按照给定的规则创建一个新类型，它通常使用 `in` 关键字来遍历旧类型中的每个属性，并对其应用一个转换。
+
+```javascript
+
+// 使用 type 类型定义一个类型 Readonly ，它接收一个类型变量 T
+// 核心功能就是接收一个 T ，然后返回一个新的类型，所有新类型的 key 都只读
+type Readonly<T> = {
+  // 使用修饰符来限制所有的属性
+  // 使用 in 操作符来遍历 T 的所有属性
+  // 从 T 中取出 P 对应的值做为新类型属性的值
+  readonly [P in keyof T]: T[P];
+};
+
+// 接收一个类型 T ，返回一个新的类型
+// 新类型所有的 key 都可选
+type Optional<T> = {
+  [P in keyof T]?: T[P];
+};
+
+interface Person {
+  name: string;
+  age: number;
+}
+
+type ReadonlyPerson = Readonly<Person>;
+type OptionalPerson = Optional<Person>;
+```
+
+**02 使用预定义的映射类型**
+
+TS 提供了一些内置的映射类型， 如 `Partial<T>` `Readonly<T>` `Record<T>` 等。
+
+```javascript
+type PartialPerson = Partial<Person>; // 所有属性变为可选
+type ReadonlyPerson = Readonly<Person>; // 所有属性变为只读
+```
+
+**03 条件映射类型**
+
+可以结合条件类型来创建更复杂的映射类型，以便依据属性的类型应用不同的转换
+
+在下面的代码中，`NullableProperties` 将一个类型的所有属性转换为原类型或 null
+
+```javascript
+
+interface Person {
+  name: string;
+  age: number;
+}
+
+type NullableProperties<T> = {
+  [P in keyof T]: T[P] | null;
+};
+
+type NullablePerson = NullableProperties<Person>;
+```
+
+**05 映射类型中的属性限制**
+
+我们可以使用类型约束来限制映射类型中的 `in` 关键字遍历的属性
+
+下面的代码中， `StringProperties` 只将 `Person` 类型中的字符串属性保留为字符串类型，其它的类型的属性都变为 `never`类型。
+```javascript
+type StringProperties<T> = {
+  //  T[P] extends string ? string : never 语法是 TS 中的条件类型
+  // 如果 T[P] 兼容 string 类型，那么就会返回 string ，否则返回 never
+  [P in keyof T]: T[P] extends string ? string : never;
+};
+
+type OnlyStringPerson = StringProperties<Person>;
+```
+
+**05 映射修饰符**
+
+映射类型还允许我们添加或移除特定的修饰符，如 `readonly` 或 `?`
+
+```javascript
+type Mutable<T> = {
+  // 表示移除原类型的属性只读修饰符
+  -readonly [P in keyof T]: T[P];
+};
+
+type NonOptional<T> = {
+  // -？ 表示移除原类型的属性可选修饰符
+  [P in keyof T]-?: T[P];
+};
+
+type MutablePerson = Mutable<ReadonlyPerson>; // 移除只读属性
+type NonOptionalPerson = NonOptional<OptionalPerson>; // 移除可选属性
+```
