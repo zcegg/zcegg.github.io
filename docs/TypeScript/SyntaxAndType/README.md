@@ -716,3 +716,104 @@ if (typeof myVariable === "number") {
   // 在这个分支中，TypeScript 知道 myVariable 不是 number 类型
 }
 ```
+
+## 枚举类型
+
+枚举（Enum）是一种特殊的类型，它为一组相关的值定义了一个友好的名称。枚举在编写清晰且易于理解的代码时非常有用。
+
+**01 数字枚举**
+
+数字枚举在 TS 中是最常见的枚举类型，其成员会被赋予从 0 开始的递增数字
+
+```javascript
+// 在下面的代码中 Direction.Up 的值为 0, Direction.Down 为1
+enum Direction {
+  Up,
+  Down,
+  Left,
+  Right
+}
+
+let dir: Direction = Direction.Up;
+```
+
+**02 字符串枚举**
+
+字符串枚举要求每个成员的值必须是字符串字面量，或者是另一个字符串枚举成员的引用。
+
+```javascript
+enum Direction {
+  Up = "UP",
+  Down = "DOWN",
+  Left = "LEFT",
+  Right = "RIGHT"
+}
+
+let dir: Direction = Direction.Left;
+```
+
+**03 异构枚举**
+
+虽然不常用，但是 TS 支持将数字和字符串混合在一个枚举中
+
+```javascript
+enum BooleanLikeEnum {
+  No = 0,
+  Yes = "YES"
+}
+```
+
+**04 计算的和常量成员**
+
+枚举成员可以是常量（在编译时计算）或计算出的（在运行时计算）
+
+```javascript
+enum FileAccess {
+  // 常量成员
+  None,
+  Read    = 1 << 1,
+  Write   = 1 << 2,
+  ReadWrite  = Read | Write,
+  // 计算的成员
+  G = "123".length
+}
+```
+
+**05 反向映射**
+
+数字枚举具有反向映射，即从枚举值到枚举名字的映射
+
+```javascript
+enum Enum {
+  A
+}
+let a = Enum.A;
+let nameOfA = Enum[a]; // "A"
+```
+
+**05 const 枚举**
+
+为了避免额外的生成代码和额外的间接引用，可以直接使用 `const` 枚举
+
+`const` 枚举只能使用常量枚举表达式，并且在编译时会被删除
+
+```javascript
+const enum Enum {
+  A = 1,
+  B = A * 2
+}
+```
+
+**06 枚举类型**
+
+枚举类型可以用于类型安全场景，确保只能使用枚举的值
+
+```javascript
+// 使用 Direction 类型来约束 direction 参数的类型
+function walk(direction: Direction) {
+    // ...
+}
+
+walk(Direction.North); // 正确
+// walk('North'); // 错误：不能将类型“"North"”分配给类型“Direction”。
+```
