@@ -245,7 +245,7 @@ namespace MathUtilities {
 }
 ```
 
-## 内置声明文件
+## 声明文件
 
 声明文件（通常以 `.d.ts`）结尾，用于提供 JS 库的类型信息，这样，TS 代码就可以知道如何正确地调用库中的函数和方法，即使实际的函数和方法是用 JS 编写的。
 
@@ -361,9 +361,102 @@ declare global {
 1. 声明文件中的代码并不是真正可执行代码，只是类型声明，不会被编译到 JS 
 2. 在编写声明文件时，应该尽量精确地描述类型，以便 TS 提供尽可能准确的类型检查。
 
-## 第三方库声明文件
-
 ## 自定义声明文件
+
+自定义声明文件允许我们为已有的 JS 代码提供类型定义。这样， TS 就可以理解这些 JS 代码的结构。这在我们使用没有提供自己的类型定义的第三方库时特别有用。
+
+**01 声明文件结构**
+
+自定义声明文件通常具有 `.d.ts` 扩展名，在这个文件中，我们可以使用 `declare` 关键字来告诉 TS 一些全局变量的类型
+
+```javascript
+// someLibrary.d.ts
+// 声明一个全局的函数
+declare function myFunction(a: number, b: number): number;
+// 声明一个全局的变量
+declare const myVariable: number;
+```
+
+**02 为函数提供类型定义**
+
+如果我们的 JS 库有一个全局函数，我们可以这样声明它
+
+```javascript
+// calculator.d.ts
+declare function add(a: number, b: number): number;
+
+// 使用
+const sum = add(1, 2); // 正确
+```
+
+**03 为类提供类型定义**
+
+对于库中的类，我们可以声明它的构造函数和方法
+
+```javascript
+// greeter.d.ts
+declare class Greeter {
+  constructor(greeting: string);
+  greet(): string;
+}
+
+// 使用时
+let greeter = new Greeter("Hello");
+console.log(greeter.greet()); // 输出: "Hello"
+```
+
+**04 为模块提供类型定义**
+
+如果一个库是一个模块，我们可以这样声明它的导出
+
+```javascript
+// node_modules/my-lib/index.d.ts
+declare module "my-lib" {
+  export function myLibFunction(a: number): number;
+}
+
+// 使用时
+import { myLibFunction } from "my-lib";
+myLibFunction(10);
+
+```
+
+**05 声明命名空间**
+
+有时，库使用了全局命名空间，我们可以这样声明它
+
+```javascript
+// utils.d.ts
+declare namespace Utils {
+  function calculateDistance(x: number, y: number): number;
+}
+
+// 使用时
+const distance = Utils.calculateDistance(10, 5);
+```
+
+**06 扩展全局对象**
+
+有时候我们需要扩展全局对象，比如 `window`
+
+```javascript
+// global.d.ts
+declare global {
+  interface Window {
+    myGlobalFunction(): void;
+  }
+}
+
+// 使用时
+// 只是在语法提示上有，不是说原型上就真的有
+window.myGlobalFunction()
+```
+
+**07 注意事项**
+
+1. 声明文件中不包含实际的代码逻辑，只用于类型声明
+2. 为确保类型安全，应该尽可能准确地反映 JS 代码的实际结构
+3. 在 TS 项目中，确保声明文件被正确的引入，以便 TS 能够找到这些类型声明
 
 ## 配置文件解析
 
