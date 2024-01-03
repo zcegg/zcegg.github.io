@@ -249,6 +249,118 @@ namespace MathUtilities {
 
 声明文件（通常以 `.d.ts`）结尾，用于提供 JS 库的类型信息，这样，TS 代码就可以知道如何正确地调用库中的函数和方法，即使实际的函数和方法是用 JS 编写的。
 
+**01 基本类型声明**
+
+我们可以为 JS 中存在的变量、函数、类等声明类型，使用对应的关键字即可。下面的代码中就使用 `declare` 来声明了一个函数类型
+
+```javascript
+// someLibrary.d.ts
+declare function myFunction(a: number, b: number): number;
+
+// 使用
+// myFunction(1, 2); // 正确
+// myFunction("1", "2"); // 错误：不能将类型“string”分配给类型“number”
+```
+
+**02 声明变量**
+
+使用 `declare var` 来描述一个全局变量的类型
+
+```javascript
+// globals.d.ts
+declare var myGlobalVar: number;
+
+// 使用：此时在任意的文件中都能使用该变量
+console.log(myGlobalVar); // 可以使用 myGlobalVar
+```
+
+**03 声明类**
+
+声明文件也可以声明类及其属性和方法
+
+```javascript
+// MyClass.d.ts
+declare class MyClass {
+  constructor(message: string);
+  greet(): string;
+}
+// 使用
+let myClassInstance = new MyClass("Hello, world!");
+console.log(myClassInstance.greet()); // 正确
+```
+
+**04 声明接口**
+
+接口在声明文件中非常有用，尤其是描述对象字面量的结构
+
+```javascript
+// interface.d.ts
+declare interface MyInterface {
+    myProperty: string;
+    myMethod(arg: number): void;
+}
+
+// 使用
+let obj: MyInterface = {
+  myProperty: "Hello",
+  myMethod(arg: number) {
+      // ...
+  }
+};
+```
+
+**05 声明模块**
+
+当我们需要提供对外部模块（如 npm包）的类型声明时，可以使用 `declare module`。
+
+```javascript
+// node_modules/someLibrary/index.d.ts
+declare module "someLibrary" {
+    export function someFunction(a: number): number;
+}
+
+// 使用
+import { someFunction } from "someLibrary";
+someFunction(5);
+```
+
+**06 命名空间的使用**
+
+可以使用命名空间来组织类型声明
+
+```javascript
+// utils.d.ts
+declare namespace Utils {
+  function utilityFunction(a: number): number;
+}
+
+// 使用
+Utils.utilityFunction(10);
+```
+
+**07 全局扩展**
+
+在声明文件中，我们还可以扩展全局现有的类型，比如扩展内置对象的原型
+
+```javascript
+// extensions.d.ts
+declare global {
+  // 内置类型 String，有一个 toNumber 的方法
+  interface String {
+    toNumber(): number;
+  }
+}
+
+// 使用
+// 这样就可以直接调用该方法了（只是在提示上有）
+"123".toNumber(); // 假设 String 原型上确实有这个方法
+```
+
+**08 注意**
+
+1. 声明文件中的代码并不是真正可执行代码，只是类型声明，不会被编译到 JS 
+2. 在编写声明文件时，应该尽量精确地描述类型，以便 TS 提供尽可能准确的类型检查。
+
 ## 第三方库声明文件
 
 ## 自定义声明文件
