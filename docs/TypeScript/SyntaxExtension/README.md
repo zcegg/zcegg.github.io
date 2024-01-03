@@ -77,3 +77,103 @@ type T1 = TypeName<string[]>;  // "object"
 ```
 
 ## TS 模块化
+
+模块化是一种代码组织方式，它允许我们将代码分割成可重用的单元。模块化在自己的作用域中运行，而不是在全局作用域中，这意味着在模块中声明的变量、函数、类等在模块外部是不可见，除非我们明确地导出它们。
+
+**01 导出 `Export`**
+
+可以使用 `export` 关键字导出变量、函数、类、接口等，也可以使用命名导出的方式导出多个成员
+
+```javascript
+// 导出 函数 add
+export function add(x: number, y: number): number {
+  return x + y;
+}
+
+// 导出函数 subtract
+export function subtract(x: number, y: number): number {
+  return x - y;
+}
+```
+
+**02 导入 `Import`**
+
+使用 `import` 关键字从其它模块中导入功能
+
+```javascript
+// app.ts
+import { add, subtract } from "./mathUtils";
+
+console.log(add(5, 3)); // 输出: 8
+console.log(subtract(5, 3)); // 输出: 2
+```
+
+也可以使用星号 `*` 导入模块中的所有导出
+
+```javascript
+// app.ts
+import * as MathUtils from "./mathUtils";
+
+console.log(MathUtils.add(5, 3)); // 输出: 8
+console.log(MathUtils.subtract(5, 3)); // 输出: 2
+```
+
+**03 默认导出 `Default Export`**
+
+每个模块可以有一个 `default` 导出，默认导出使用 `default` 关键字标记
+
+```javascript
+// calculator.ts
+// 每个模块可以有一个默认的 default 导出，可以是 类、函数等
+export default class Calculator {
+  add(x: number, y: number): number {
+      return x + y;
+  }
+}
+```
+
+使用默认导出时，不需要花括号
+
+```javascript
+// app.ts
+// 默认导出，直接使用名称即可
+import Calculator from "./calculator";
+
+const calc = new Calculator();
+console.log(calc.add(5, 3)); // 输出: 8
+```
+
+**04 重新导出 （Re-export）**
+
+可以使用 `export` 从其它模块重新导出功能，常用于创建单一的入口点
+
+```javascript
+// index.ts
+// 从 mathUtils 中导入 add 和 subtract 然后再导出
+export { add, subtract } from "./mathUtils";
+
+// 重新做为默认导出
+export { default as Calculator } from "./calculator";
+```
+
+然后可以从 `index.ts` 统一导入所有的需要的功能
+
+```javascript
+// app.ts
+import { add, Calculator } from "./index";
+
+console.log(add(5, 3)); // 输出: 8
+const calc = new Calculator();
+```
+
+## TS 命名空间
+
+## 内置声明文件
+
+## 第三方库声明文件
+
+## 自定义声明文件
+
+## 配置文件解析
+
+## 装饰器
