@@ -247,22 +247,22 @@ namespace MathUtilities {
 
 ## 声明文件
 
-声明文件（通常以 `.d.ts`）结尾，用于提供 JS 库的类型信息，这样，TS 代码就可以知道如何正确地调用库中的函数和方法，即使实际的函数和方法是用 JS 编写的。
+声明文件（通常以 `.d.ts`）结尾，用于提供 JS 库的类型信息，这使得 TS 能够理解这些代码的结构，从而提供类型检查和智能提示。
 
 **01 基本类型声明**
 
-我们可以为 JS 中存在的变量、函数、类等声明类型，使用对应的关键字即可。下面的代码中就使用 `declare` 来声明了一个函数类型
+声明文件通常包含 `declare` 关键字的使用，它用于声明 变量、函数、类或者任何其它类型的结构，而不实际定义它们的实现。
 
 ```javascript
-// someLibrary.d.ts
-declare function myFunction(a: number, b: number): number;
-
-// 使用
-// myFunction(1, 2); // 正确
-// myFunction("1", "2"); // 错误：不能将类型“string”分配给类型“number”
+// example.d.ts
+declare function exampleFunction(a: number, b: number): number;
+declare class ExampleClass {
+    constructor(message: string);
+    showMessage(): void;
+}
 ```
 
-**02 声明变量**
+**02 声明全局变量**
 
 使用 `declare var` 来描述一个全局变量的类型
 
@@ -316,7 +316,7 @@ let obj: MyInterface = {
 ```javascript
 // node_modules/someLibrary/index.d.ts
 declare module "someLibrary" {
-    export function someFunction(a: number): number;
+  export function someFunction(a: number): number;
 }
 
 // 使用
@@ -324,42 +324,44 @@ import { someFunction } from "someLibrary";
 someFunction(5);
 ```
 
-**06 命名空间的使用**
-
-可以使用命名空间来组织类型声明
+例如 JQuery 声明文件，假设我们正在使用 JQuery， TS 需要知道 Jquery 的 `$` 变量的类型。
 
 ```javascript
-// utils.d.ts
-declare namespace Utils {
-  function utilityFunction(a: number): number;
-}
+// jquery.d.ts
+// 声明一个全局的变量  $，类型为 JQueryStatic
+declare var $: JQueryStatic;
 
 // 使用
-Utils.utilityFunction(10);
+$("#myId").fadeIn();
 ```
 
-**07 全局扩展**
-
-在声明文件中，我们还可以扩展全局现有的类型，比如扩展内置对象的原型
+例如 node.js 的内置模块，如 `fs` ，TS 有官方的类型声明文件
 
 ```javascript
-// extensions.d.ts
-declare global {
-  // 内置类型 String，有一个 toNumber 的方法
-  interface String {
-    toNumber(): number;
-  }
-}
-
 // 使用
-// 这样就可以直接调用该方法了（只是在提示上有）
-"123".toNumber(); // 假设 String 原型上确实有这个方法
+import * as fs from "fs";
+
+// 此后我们就可以全局使用 fs，及它的结构提示。
+fs.readFileSync("path/to/file", "utf8");
 ```
 
-**08 注意**
+TS 提供了许多内置的类型声明，如 `Promise` `Array` `NodeList` 等
 
-1. 声明文件中的代码并不是真正可执行代码，只是类型声明，不会被编译到 JS 
-2. 在编写声明文件时，应该尽量精确地描述类型，以便 TS 提供尽可能准确的类型检查。
+```javascript
+let promise: Promise<string>;
+promise = new Promise((resolve, reject) => {
+  resolve("Hello, TypeScript!");
+});
+
+let numbers: Array<number> = [1, 2, 3];
+let nodeList: NodeList = document.querySelectorAll("div");
+```
+
+**06 注意**
+
+1. 声明语文件不会被编译成 JS ，它们只用于类型检查
+2. 当使用第三方JS库的时候，我们通常需要安装相应的类型声明文件（`@types/node`）
+3. 我们应该只在不有现成的类型声明文件时编写自定义声明文件
 
 ## 自定义声明文件
 
