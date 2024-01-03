@@ -168,6 +168,83 @@ const calc = new Calculator();
 
 ## TS 命名空间
 
+命名空间（之前称为『内部模块』）是一种将相关的代码组织在一起的方式。命名空间可以包含类、接口、函数和变量，用于避免全局命名空间的污染。
+
+但是在 TS 中更推荐使用模块，在一些特定情况下（如组织大量相关的代码，且不希望将它们放入模块），命名空间仍然很有
+
+使用时，我们应该避免过度使用命名空间，尤其是在模块系统（如 ES6模块）可以u被使用的情况下。使用命名空间时，要避免潜在的作用域问题
+
+**01 声明命名空间**
+
+使用 `namespace` 关键字来声明一个命名空间，命名空间可以包含子命名空间、类、接口、函数、和变量
+
+```javascript
+namespace MathUtilities {
+  export function add(x: number, y: number): number {
+    return x + y;
+  }
+
+  export function subtract(x: number, y: number): number {
+    return x - y;
+  }
+}
+```
+
+**02 使用命名空间成员**
+
+要在同一个文件内使用命名空间中的成员，直接使用命名空间的名称加点符号（`.`）访问。
+
+```javascript
+// 命名空间.成员属性名
+let result = MathUtilities.add(5, 3);
+console.log(result); // 输出: 8
+```
+
+**03 命名空间嵌套**
+
+命名空间可以嵌套在其它命名空间中
+
+```javascript
+
+// namespace 定义命名空间
+// 自定义命名空间名称
+namespace Geometry {
+  // 内部可以嵌套命名空间
+  export namespace Area {
+    // 导出指定的成员
+    export function square(sideLength: number): number {
+        return sideLength * sideLength;
+    }
+  }
+}
+
+// 访问的时候采用 命名空间A.命名空间B.成员名称
+let area = Geometry.Area.square(5);
+console.log(area); // 输出: 25
+```
+
+**04 分割命名空间**
+
+大型命名空间可以分割成多个文件，使用 `/// <reference path="...." />` 指令来引用其它文件中的命名空间
+
+```javascript
+// MathUtilities.ts
+namespace MathUtilities {
+  export function add(x: number, y: number): number {
+    return x + y;
+  }
+}
+
+// MathUtilities-Subtract.ts
+// 使用下在的语法可以引入 MathUtilities.ts 中的命名空间
+/// <reference path="MathUtilities.ts" />
+namespace MathUtilities {
+  export function subtract(x: number, y: number): number {
+    return x - y;
+  }
+}
+```
+
 ## 内置声明文件
 
 ## 第三方库声明文件
