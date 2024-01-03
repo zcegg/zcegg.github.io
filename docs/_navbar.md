@@ -7,4 +7,6 @@
   * [函数类型](/TypeScript/FunctionType/)
   * [面向对象](/TypeScript/ObjectOriented/)
   * [泛型编程](/TypeScript/GenericProgramming/)
+  * [内置类型](/TypeScript/BuiltInType/)
+  * [语法扩展](/TypeScript/SyntaxExtension/)
 * 后端技术
