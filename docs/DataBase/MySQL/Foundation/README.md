@@ -66,13 +66,37 @@ MySQL 是一个开源的关系型数据库管理系统（RDBMS），使用结构
   mysql -u [username] -p[password] -h [hostname] -P [port]
 ```
 
-```typescript
-// TypeScript 代码
-const message: string = "Hello, TypeScript!";
-console.log(message);
+**说明**
+
+1. `-u [username]` mysql 的用户名
+2. `-p [password]` mysql 的密码，注意 -p 和密码之间没有空格。如果省略密码，系统在执行命令后会提示我们输入
+3. `-h [hostname]` mysql 服务器的主机名，如果 mysql 服务器运行在本地机器上，可以使用 localhost ，或省略该选项
+4. `-p [port]` mysql 服务器监听的端口号，如果是默认端口（3306），可以省略该选项
+
+**示例**
+
+假设我们的用户名是 `root` ，密码是 `123456`，mysql 服务器运行在本地机器上，使用默认端口，则连接命令为：
+
+```bash
+mysql -u root -p 123456
+mysql -u root -p 然后依据提示输入密码
 ```
+
+**02 注意事项**
+
+1. 确保在运行 mysql 客户端之前， MySQL 服务已经启动
+2. 在生产环境中，为了安全起见，避免在命令行中直接包含密码，最好在提示时输入
 
 ### GUI连接
 
+MySQL 数据库的图形用户界面（GUI）工具提供了一种直观和友好的方式来管理数据库，执行查询，以及进行数据库设计和优化。
+
+**01 MySQL Workbench**
+
+它是 MySQL 官方提供的一个强大的可视化工具，它提供了数据库设计，sql 开发，数据库管理和服务器配置等功能。通过它的 EER(增强实体-关系)图功能，用户可以非常直观地设计和修入数据库结构
+
+**02 Navicat for MySQL**
+
+它是一个商业的数据库管理工具，提供跨平台支持（windows macos linux）。它具有丰富的功能，如数据库设计、数据同步、备份、导入、导出等功能，适用于专业开发人员和新手。推荐购买正版使用
 
 
