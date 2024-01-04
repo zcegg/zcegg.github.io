@@ -9,5 +9,6 @@
   * [泛型编程](/TypeScript/GenericProgramming/)
   * [内置类型](/TypeScript/BuiltInType/)
   * [语法扩展](/TypeScript/SyntaxExtension/)
+  * [类型体操](/TypeScript/TypeGymnastics/)
   
 * NodeJS
