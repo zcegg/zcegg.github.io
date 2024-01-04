@@ -462,4 +462,169 @@ window.myGlobalFunction()
 
 ## 配置文件解析
 
+在 TS 项目中， `tsconfig.json` 文件是一个重要的配置文件，用于指定 TypeScript 编译器的编译选项和项目设置。
+
+**01 `compilerOptions`**
+
+该配置项的值是一个对象，包含用于控制编译器行为的各种选项
+
+- target：指定 ECMAScript 目标版本（如：es5 es6 es2017等）
+- module：指定模块代码生成方式（如 commonjs amd es2015等）
+- strict：启用所有严格类型检查选项
+- outDir：指定输出目录，编译后的文件将放置在这里
+- sourceMap：是否生成源代码映射文件（.map文件），用于调试
+
+```javascript
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "strict": true,
+    "outDir": "./dist",
+    "sourceMap": true
+  }
+}
+```
+
+**02 `include` 和 `exclude`**
+
+这两个选项用于指定编译器应包含或排除哪些文件
+
+1. include：指定一个文件模式列表，编译器将包含这些模式匹配的文件
+2. exclude：指定一个文件模式列表，编译器将排除这些械式匹配的文件
+
+```javascript
+{
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ]
+}
+```
+
+**03 `files`**
+
+如果我们只想编译项目中的特定文件，可以使用 `files` 属性明确指定这些文件
+
+```javascript
+{
+  "files": [
+    "core.ts",
+    "main.ts"
+  ]
+}
+```
+
+**04 `extends` **
+
+该属性用于指定另一个要继承的 `tsconfig.json` 文件的路径
+
+```javascript
+{
+  "extends": "./base-config.json"
+}
+```
+
+**05 `lib`**
+
+使用 `lib` 指定编译过程中将包含在编译环境中的库文件列表，例如，如果我们的代码运行在浏览器中，我们可能需要 DOM 类型的定义。(运行时需要依赖的库文件的类型定义文件列表)
+
+```javascript
+{
+  "compilerOptions": {
+      "lib": ["dom", "es6"]
+  }
+}
+```
+
+**06 `noEmit`**
+
+这个选项用于在不生成输了文件的情况下运行编译器，通常用于仅检查类型错误
+
+```javascript
+{
+  "compilerOptions": {
+    "noEmit": true
+  }
+}
+```
+
+**07 `jsx`**
+
+如果我们在项目中使用 JSX(如 React) ，需要设置 `jsx` 选项来指定 JSX 代码的编译方式
+
+```javascript
+{
+  "compilerOptions": {
+    "jsx": "react"
+  }
+}
+```
+
+**08 `noImplicitAny`**
+
+设置为 `true` 时，任何隐式 `any` 类型都会导致编译错误，这有助于确保所有变量的类型都是显式声明，提高代码的类型安全。
+
+```javascript
+{
+    "compilerOptions": {
+        "noImplicitAny": true
+    }
+}
+```
+
+**09 `strictNullChecks`**
+
+当设置为 `true` 时，将对 `null` 和 `undefined` 进行严格检查，从而避免许多常见的运行时错误
+
+```javascript
+{
+  "compilerOptions": {
+    "strictNullChecks": true
+  }
+}
+```
+
+**09 `esModuleInterop`**
+
+启用该选项后，可以允许默认导入与非 ECMAScript 模块之间的互操作性，在这处理某些第三方库时非常有用。
+
+```javascript
+{
+  "compilerOptions": {
+    "esModuleInterop": true
+  }
+}
+```
+
+**10 `skipLibCheck`**
+
+设置为 `true` 时，编译器将跳过所有声明文件（.d.ts） 的类型检查，某种程度上可以加快编译速度
+
+**11 `allowJS`**
+
+允许编译器编译 JS 文件，在将 JS 项目迁移至 TS 时能用到
+
+**12 `noUnusedLocals` 和`noUnusedParameters`**
+
+这两个选项用于检查未使用的局部变量和函数参数，有助于保持代码的整洁和可维护性。
+
+**13 `baseUrl` 和 `paths`**
+
+用于配置模块解析方式，特别是在有复杂的项目结构时
+
+```javascript
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+        "*": ["node_modules/*", "src/types/*"]
+    }
+  }
+}
+```
+
 ## 装饰器
