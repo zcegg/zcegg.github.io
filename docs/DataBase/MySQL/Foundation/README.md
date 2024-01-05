@@ -145,9 +145,90 @@ SQL(Structured Query Language) 是一种专门用于管理和操作关系型数�
 
 在创建数据库的时候，如果数据已经存在，标准的 `CREATE DATABASE` 语句会导致语法错误。为了避免这种情况，我们可以使用 `IF NOT EXISTS` 选项，这样的话，如果数据库已经存在，SQL 命令就不会执行任何操作，也不会显示报错。
 
-```bash
+```shell
 # 创建一个数据库，如果它不存在的话
 CREATE DATABASE IF NOT EXISTS database_name
 ```
+
+**说明**
+- `IF NOT EXISTS` 这是一个条件判断，用于检查指定的数据库名称是否已存在，如果数据库不存在，那么就会创建一个新的数据库；如果已经存在，那么 SQL 命令不会执行任何操作，也不会引发错误。
+- `database_name` 是我们要创建的数据库名称。名称应该遵循数据库系统的命名规则，例如：不包含特殊字符、不与保留字冲突等
+
+**注意**
+- `命名规则`：选择的数据库名称应该符合特定的规则和限制，例如：避免使用空格、特殊字符或关键字。
+- `字符集和排序规则`：在创建数据库时，我们可以指定字符集和排序规则。
+
+```shell
+CREATE DATABASE IF NOT EXISTS mydatabase
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci
+```
+
+这里指定了字符集为 `utf8mb4` 和对应的排序规则 `utf8mb4_unicode_ci`
+
+### 删除数据库
+
+删除数据库是一个重要操作，一旦执行，所有存储在数据库中的数据将被永久删除。
+
+```shell
+DROP DATABASE IF EXISTS database_name
+DROP DATABASE IF EXISTS mydatabase
+```
+
+**注意**
+- `IF EXISTS` 这个条件用于检查指定的数据库是否存在，如果数据库存在，则执行删除操作；如果不存在，则不执行任何操作，避免了错误。
+- `操作前备份`：在执行删除操作之前，请确保已备份所有重要数据。
+
+### 修改数据库
+
+修改数据库通常涉及更改其配置或参数。这类操作依赖于具体的数据库系统和设置，但是修改数据的操作在实际生产时，并不常见，因为在设计之初这些信息都应制定完善。
+
+**示例**
+
+在 MySQL 中，修改数据库的字符集和排序规则
+
+```shell
+ALTER DATABASE database_name
+CHARACTER SET = utf8mb4
+COLLATE=utf8mb4_unicode_ci
+```
+
+**注意**
+- 修改数据库属性可能会影响存储在其中的数据，应该谨慎操作
+- 一些修改可能需要数据库重启才能生效
+
+### 使用某个数据库
+
+在执行针对特定数据库的操作之间，需要先选择（使用）这个数据库
+
+```bash
+  USE database_name
+```
+
+**注意**
+- 在多用户、多数据库的环境中，确保选择了正确的数据库，避免在错误的数据库上执行操作
+
+### 查看数据库
+
+查看数据库服务器上所有数据库的列表
+
+```bash
+  SHOW DATABASE;
+```
+
+**注意**
+- 这个命令列出所有数据库，但我们可能只能够访问其中一部分，这取决于我们的用户权限
+
+我们还可以获取特定数据库的详细信息，如表结构、大小等。
+
+**示例**
+
+```bash
+  SHOW TABLES FROM database_name
+  DESCRIBE database_name.table_name
+```
+
+**注意**
+- 获取数据库信息的方法和可用命令会依据具体的数据库系统而有所不同
 
 
