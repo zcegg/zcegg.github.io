@@ -6,7 +6,7 @@
 
 定义一个类的基本结构包括类名、构造函数和成员函数（方法）
 
-```javascript
+```typescript
 class MyClass {
   constructor() {
     // 构造函数代码
@@ -22,7 +22,7 @@ class MyClass {
 
 类可以包含属性（成员变量）和方法（成员函数）
 
-```javascript
+```typescript
 class MyClass {
   myProperty: string; // 属性
 
@@ -44,7 +44,7 @@ TS 支持三种访问修饰符：`public(默认)`、`private` 和 `protected`
 - `private`：成员只能被类本身访问(类的内部)
 - `protected`：成员可以被类本身及其子类访问（类内和子类）
 
-```javascript
+```typescript
 class MyClass {
   public publicProperty: string;
   private privateProperty: string;
@@ -56,7 +56,7 @@ class MyClass {
 
 静态属性和方法属于类本身，而不是类的实例
 
-```javascript
+```typescript
 class MyClass {
   // 通过 static 关键字定义静态属性
   static staticProperty: string = "static";
@@ -71,7 +71,7 @@ class MyClass {
 
 **05 继承**
 
-```javascript
+```typescript
 class BaseClass {
   baseMethod(): void {}
 }
@@ -86,7 +86,7 @@ class DerivedClass extends BaseClass {
 
 抽象类是供其它类继承的基类，不能被实例化。抽象方法是必须在派生类中实现的方法
 
-```javascript
+```typescript
 
 // 通过 abstract 关键字来定义一个抽象，不能被实现，只能被继承
 abstract class AbstractClass {
@@ -105,7 +105,7 @@ class ConcreteClass extends AbstractClass {
 
 类可以实现一个或多个接口，表示必须实现接口中定义的所有方法
 
-```javascript
+```typescript
 // 使用 interface 定义接口
 interface MyInterface {
   myMethod(): void;
@@ -124,7 +124,7 @@ class MyClass implements MyInterface {
 
 我们可以在构造函数中直接使用访问修饰符，这将自动创建并初始化相应的成员变量
 
-```javascript
+```typescript
   class MyClass{
     // 手动指定成员属性
     public name:string = ''
@@ -139,7 +139,7 @@ class MyClass implements MyInterface {
 
 TS 支持 getter 和 setter 方法，用于控制对类的成员的访问和赋值
 
-```javascript
+```typescript
 class MyClass {
   // 定义一个私有属性，只希望在类的内部进行访问
   // 但的确又存在外部对它赋值的情况
@@ -175,7 +175,7 @@ class MyClass {
 
 **02 语法示例**
 
-```javascript
+```typescript
 class Person {
   public name: string;        // 公开属性，可以在任何地方访问
   private age: number;        // 私有属性，只能在 Person 类内部访问
@@ -242,7 +242,7 @@ alice.showEmail(); // 正确
 
 **01 基本语法**
 
-```javascript
+```typescript
 class BaseClass {
     baseMethod() {
         console.log("Method in BaseClass");
@@ -260,7 +260,7 @@ class DerivedClass extends BaseClass {
 
 在 TS 中，如果在派生类中定义了构造函数，必须先调用 `super()`，也就是基类的构造函数
 
-```javascript
+```typescript
 class BaseClass {
     constructor(public name: string) {}
 }
@@ -277,7 +277,7 @@ class DerivedClass extends BaseClass {
 
 派生类可以重写基类中的方法
 
-```javascript
+```typescript
 // 定我基类 BaseClass，拥有成员方法 greet
 class BaseClass {
     greet() {
@@ -297,7 +297,7 @@ class DerivedClass extends BaseClass {
 
 使用 `super` 关键字可以在派生类中访问基类的方法
 
-```javascript
+```typescript
 class BaseClass {
   greet() {
     console.log("Hello from BaseClass");
@@ -317,7 +317,7 @@ class DerivedClass extends BaseClass {
 
 派生类继承基类的所有公共和受保护成员，但不继承私有成员
 
-```javascript
+```typescript
 class BaseClass {
     public publicProperty: string;
     protected protectedProperty: string;
@@ -338,7 +338,7 @@ class DerivedClass extends BaseClass {
 
 抽象类不能被实例化，通常作为其它类的基类
 
-```javascript
+```typescript
 // 抽象类可以拥有抽象方法，不能有实现
 abstract class AbstractClass {
   abstract abstractMethod(): void;
@@ -355,7 +355,7 @@ class ConcreteClass extends AbstractClass {
 
 继承支持多态，派生类的实例可以赋值给基类类型的变量
 
-```javascript
+```typescript
 class BaseClass {}
 class DerivedClass extends BaseClass {}
 
@@ -370,7 +370,7 @@ let instance: BaseClass = new DerivedClass();
 
 使用 `abstract` 关键字定义一个抽象类
 
-```javascript
+```typescript
 
 // Animal 是一个抽象类，它定义了一个抽象方法 `makeSound` 和一个普通方法 `move`
 abstract class Animal {
@@ -385,7 +385,7 @@ abstract class Animal {
 
 抽象类中的抽象方法也使用 `abstract` 关键字标记，并且只能在抽象类的内部定义，抽象方法只能声明方法签名。不能包含具体的实现
 
-```javascript
+```typescript
 abstract class Animal {
   abstract makeSound(): void;
 }
@@ -395,7 +395,7 @@ abstract class Animal {
 
 抽象类的子类必须实现抽象类中「所有的抽象方法」，否则它们也必须标记为抽象类
 
-```javascript
+```typescript
 class Dog extends Animal {
   makeSound(): void {
     console.log('Woof! Woof!');
@@ -407,7 +407,7 @@ class Dog extends Animal {
 
 虽然抽象类不能被实例化，它们可以包含构造函数，这个构造函数在派生类中被调用
 
-```javascript
+```typescript
 abstract class Animal {
   constructor(public name: string) {}
 }
@@ -423,7 +423,7 @@ class Dog extends Animal {
 
 抽象类可以包含抽象属性，这些属性必须在派生类中被实现
 
-```javascript
+```typescript
 abstract class Animal {
   abstract readonly numberOfLegs: number;
 }
@@ -447,7 +447,7 @@ class Dog extends Animal {
 
 多态基于继承，我们需要有一个基类（或父类），以及一个或多个继承自该基类的派生类（或子类）
 
-```javascript
+```typescript
 // 定义一基类
 class Animal {
     makeSound(): void {
@@ -474,7 +474,7 @@ class Cat extends Animal {
 
 多态允许我们使用基类类型的引用或指针来调用派生自该基类的任何子类的方法
 
-```javascript
+```typescript
 // 设置一个变量标记为 基类 的类型
 let myAnimal: Animal;
 
@@ -496,7 +496,7 @@ myAnimal.makeSound();  // 输出: Meow
 
 Animal 的 makeSound 方法可以用不同的实现，可以是 Dog 的 ，可以是 Bird 的。可以是 Cat 的。
 
-```javascript
+```typescript
 class Bird extends Animal {
   // 重写了基类中的方法，然后符合 Animal ，那么父类引用就可以指向一个子类的实例，这样 myAnimal 就是一个 Bird 的实例，也可以调用 makeSound 方法。
   makeSound(): void {
@@ -509,7 +509,7 @@ class Bird extends Animal {
 
 如果需要调用子类中特有的方法，我们需要先对基类引用进行类型断言，从而指明具体的子类类型
 
-```javascript
+```typescript
 if (myAnimal instanceof Dog) {
   // 现在 TypeScript 知道 myAnimal 是 Dog 类型
   (myAnimal as Dog).someDogSpecificMethod();
@@ -520,7 +520,7 @@ if (myAnimal instanceof Dog) {
 
 抽象类经常用于创建多态行为，我们可以定义一个抽象基类，其中包含抽象方法。然后在各个派生类中实现实些方法
 
-```javascript
+```typescript
 abstract class Shape {
   abstract draw(): void;
 }
@@ -546,7 +546,7 @@ class Rectangle extends Shape {
 
 索引签名可以用字符串或数字类型的键
 
-```javascript
+```typescript
 // index 是一个仅为了定义签名而使用的变量名，我们可以自由命名
 // valueType 是属性值的类型
 interface StringIndex {
@@ -560,7 +560,7 @@ interface NumberIndex {
 
 **02 字符串索引签名**
 
-```javascript
+```typescript
 interface StringDictionary {
   // 约束接口的属性名都是字符串类型，对应的值都是 string 类型
   [key: string]: string;
@@ -576,7 +576,7 @@ let myDict: StringDictionary = {
 
 数字索引用于那些通过数字索引的方式访问的类型，类似于数组，但索引签名定义了值的类型
 
-```javascript
+```typescript
 interface NumberDictionary {
   [index: number]: string;
 }
@@ -591,7 +591,7 @@ let myArray: NumberDictionary = {
 
 我们可以在同一个接口中同时使用字符串和数字索引，但需要注意，数字索引的返回值必须是字符串索引返回值类型的子类型，因为 JS 在运行时会将数字索引转为字符串。
 
-```javascript
+```typescript
 interface MixedDictionary {
   // index:number 的值类型，必须是 string 类型的子类型
   [index: number]: string;

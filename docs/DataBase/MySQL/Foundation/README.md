@@ -137,3 +137,17 @@ SQL(Structured Query Language) 是一种专门用于管理和操作关系型数�
 
 
 
+## 数据库操作（DDL）
+
+上文提到过 DDL 语句的用途就是用来控制数据库、数据表的增、删、改操作。这里就归纳一些生产过程中可能会用到的数据库操.
+
+### 创建数据库
+
+在创建数据库的时候，如果数据已经存在，标准的 `CREATE DATABASE` 语句会导致语法错误。为了避免这种情况，我们可以使用 `IF NOT EXISTS` 选项，这样的话，如果数据库已经存在，SQL 命令就不会执行任何操作，也不会显示报错。
+
+```bash
+# 创建一个数据库，如果它不存在的话
+CREATE DATABASE IF NOT EXISTS database_name
+```
+
+

@@ -4,7 +4,7 @@
 
 **01 基本语法**
 
-```javascript
+```typescript
 // 使用联合类型
 let myVariable: string | number;
 myVariable = "Hello"; // 合法
@@ -16,7 +16,7 @@ myVariable = 42;      // 合法
 
 通过类型守卫，可以在运行时检查联合类型的具体类型。这个其实就是我们前文提到过的类型缩小、缩窄。可以理解为只要我们使用了联合类型，那么在使用具体类型值前最后先明确一下它的具体类型。
 
-```javascript
+```typescript
 function printValue(value: string | number): void {
   if (typeof value === "string") {
     console.log(value.toUpperCase());
@@ -35,7 +35,7 @@ printValue(42);      // 输出: 42.00
 
 在下面的代码中，`Point` 类型是一个联合类型，表示一个点可以具有 `x` 属性或者 `y` 属性。
 
-```javascript
+```typescript
 type Point = { x: number } | { y: number };
 
 let myPoint: Point = { x: 10 }; // 合法
@@ -47,7 +47,7 @@ myPoint = { y: 20 };             // 合法
 
 联合类型经常与 `null` 和 `undefined` 一起使用，表示一个值可以是某种类型或者是 `null` 或 `undefined`
 
-```javascript
+```typescript
 let myValue: string | null | undefined;
 myValue = "Hello";   // 合法
 myValue = null;      // 合法
@@ -62,7 +62,7 @@ myValue = undefined; // 合法
 
 在下面的示例中，`Shape` 类型是一个可辩识联合类型，通过 `kind` 属性来区分不同的形状
 
-```javascript
+```typescript
 type Shape =
   | { kind: "circle"; radius: number }
   | { kind: "square"; sideLength: number };
@@ -87,7 +87,7 @@ function getArea(shape: Shape): number {
 
 交叉类型使用 `&` 符号来组合多个类型
 
-```javascript
+```typescript
 type FirstType = { name: string; };
 type SecondType = { age: number; };
 
@@ -100,7 +100,7 @@ type CombinedType = FirstType & SecondType;
 - 如果两个类型具有相同的属性，但属性类型不同，则结果类昔中该属性的类型就是这些类型的交叉类型
 - 如果属性类型不兼容，则交叉之后就是 `never` 类型
 
-```javascript
+```typescript
 type Type1 = { prop: string; };
 type Type2 = { prop: number; };
 
@@ -114,7 +114,7 @@ type CombinedType = Type1 & Type2; // { prop: never; }
 
 交叉类型可以用来合并接口或类型的类型
 
-```javascript
+```typescript
 // 定义一个接口，包含一个 run 属性，它是一个函数
 interface Runnable {
     run(): void;
@@ -138,7 +138,7 @@ class Hero implements Action {
 
 交叉类型可以与泛型一起使用，提供更灵活的类型组合
 
-```javascript
+```typescript
 type Container<T> = { value: T };
 type Timestamped<T> = { timestamp: Date } & T;
 
@@ -161,7 +161,7 @@ type TimestampedContainer<T> = Timestamped<Container<T>>;
 
 字符串字面量类型允许我们指定变量或参数必须是一个确切的字符串值
 
-```javascript
+```typescript
 
 // 联合类型的几个值都是具体的 string 类型值
 type Direction = "north" | "south" | "east" | "west";
@@ -179,7 +179,7 @@ move("up");    // 错误：类型 '"up"' 不能赋值给类型 'Direction'
 
 限制类型的值必须是某个固定的数值字面量
 
-```javascript
+```typescript
 type Answer = 42;
 
 let myAnswer: Answer = 42;    // 正确
@@ -190,7 +190,7 @@ let wrongAnswer: Answer = 43; // 错误：类型 '43' 不能赋值给类型 '42'
 
 布尔字面量类型限制变量必须是 `true` 或 `false`
 
-```javascript
+```typescript
 type TrueType = true;
 let isTrue: TrueType = true;  // 正确
 let isFalse: TrueType = false; // 错误：类型 'false' 不能赋值给类型 'true'
@@ -200,7 +200,7 @@ let isFalse: TrueType = false; // 错误：类型 'false' 不能赋值给类型 
 
 『字面量类型通常都是与联合类型结合使用，用于创建一组固定的值』
 
-```javascript
+```typescript
 type HTTPMethod = "GET" | "POST" | "PUT" | "DELETE";
 
 function sendRequest(method: HTTPMethod, url: string) {
@@ -214,7 +214,7 @@ function sendRequest(method: HTTPMethod, url: string) {
 
 在下面的示例中，我们定义了两个接口，然后通过类型别名将他们组合在一起，这样就生成了一个更复杂的类型。但是两个接口中的属性并不完全相同，所以将来我们在具体使用组合而成的复杂类型时，为了保证类型安全就需要具体化当前值的类型。此时就可以在接口中定义一个字面量类型。这样进行类型缩小或者守卫时就可以直接判断使用。从而也创建了一个可辩识的联合类型。
 
-```javascript
+```typescript
 interface Circle {
     kind: "circle";
     radius: number;
@@ -245,7 +245,7 @@ function getArea(shape: Shape): number {
 
 类型别名用于为一个类型指定一个名字
 
-```javascript
+```typescript
 type Point = {
     x: number;
     y: number;
@@ -258,7 +258,7 @@ const point: Point = { x: 10, y: 20 };
 
 类型别名可以用于创建联合类型，表示一个值可以是几种类型之一
 
-```javascript
+```typescript
 // 定义联合类型的类型别名
 type ID = string | number;
 
@@ -270,7 +270,7 @@ userId = 123;  // 也可以是一个 number
 
 类型别名也可以用来组合多个类型，创建一个包含所有类型属性的单一类型
 
-```javascript
+```typescript
 // 定义一个 Draggable
 type Draggable = {
     drag(): void;
@@ -295,7 +295,7 @@ const textBox: UIWidget = {
 
 类型别名可以使用泛型，提供更高的复用性和适用性
 
-```javascript
+```typescript
 
 // 定义了 泛型 T ，内部使用 T 
 type Container<T> = { value: T };
@@ -309,7 +309,7 @@ const stringContainer: Container<string> = { value: "Hello" };
 
 类型别名非常适合用于创建映射类型，基于旧类型来创建新类型。但是，你可能对于映射类型本身感到非常因扰。所以，我们后面会单独说明映射类型
 
-```javascript
+```typescript
 type Readonly<T> = {
   // readonly 用于限制只读
   // keyof T 会得到 T 中的所有的 key 组成的[]
@@ -326,7 +326,7 @@ type ReadonlyPoint = Readonly<Point>;
 
 类型别我可以用来定义条件类型，这种类型依据条件表达式的结果产生不同的类型，上面的映射类型与这里的条件类型，在后续我们会继续说明。这里主要有个印象
 
-```javascript
+```typescript
 // T extends string 就是一个条件语句，返回 true 或 false
 // T 只要是 string 的子类型就返回 true，否则 false
 type Check<T> = T extends string ? "String" : "Other";
@@ -339,7 +339,7 @@ type Type2 = Check<number>;  // "Other"
 
 类型别名可以用来定义函数的类型
 
-```javascript
+```typescript
 // 将一个 (message: string) => void 类型通过 type 来定义别名
 type Greeter = (message: string) => void;
 
@@ -350,7 +350,7 @@ const greet: Greeter = message => console.log(message);
 
 类型别名也可以用来定义元组和数组类型
 
-```javascript
+```typescript
 // 下面定义数组的方式并不推荐，可以 string[]
 type StringArray = Array<string>;
 type NumberArray = number[];
@@ -370,7 +370,7 @@ type Response = [string, number];  // 元组类型
 
 在下面的代码中，`Point` 是一个接口，表示具有 `x` 和 `y` 属性的点类型。`myPoint` 是一个符合 `Point` 接口定义的对象
 
-```javascript
+```typescript
 // 定义接口：采用 interface 关键字
 interface Point {
   x: number;
@@ -385,7 +385,7 @@ let myPoint: Point = { x: 10, y: 20 };
 
 接口中的属性可以标记为可选，使用 `?` 符号，我们在之前已经见到过了
 
-```javascript
+```typescript
 interface Person {
   name: string;
   age?: number; // 可选属性
@@ -401,7 +401,7 @@ let person2: Person = { name: "Bob", age: 30 };
 
 接口中的属性可以标记为只读，使用 `readonly` 关键字
 
-```javascript
+```typescript
 // 问号在属性的后面
 // readonly 在属性的前面
 interface Config {
@@ -417,7 +417,7 @@ let config: Config = { apiKey: "abc123", endpoint: "/api" };
 
 接口也可以用于描述函数类型，在函数类型中我们会再次见到。下面的语法我们也称之为叫调用签名
 
-```javascript
+```typescript
 
 // 定义一个接口，描述函数时采用 ():返回值的 语法结构
 interface GreetFunction {
@@ -433,7 +433,7 @@ let greet: GreetFunction = function (name) {
 
 接口可以描述对象的可索引属性，支持字符串和数字索引（只支持这两种）
 
-```javascript
+```typescript
 interface StringArray {
   // 索引的类型是 number ，对应的值类型是 string
   [index: number]: string;
@@ -452,7 +452,7 @@ let firstItem: string = myArray[0];
 
 接口可以通过 `extends` 关键字继承其它接口
 
-```javascript
+```typescript
 // 定义一个接口 Shape
 interface Shape {
   color: string;
@@ -471,7 +471,7 @@ let square: Square = { color: "red", sideLength: 10 };
 
 接口可以被类实现，从而确保类拥有接口定义的属性和方法。关于 TS 中的类，在后面还会详细说明
 
-```javascript
+```typescript
 // 定义一个接口 Clock，包含 currentTime key ，及 setTime 函数
 interface Clock {
   currentTime: Date;
@@ -492,7 +492,7 @@ class WallClock implements Clock {
 
 接口可以用来定义混合类型，例如一个对象可以同时作为函数和对象使用。
 
-```javascript
+```typescript
 
 // 使用 interface 关键字定义一个接口
 // 看似一个对象类型，但是可以是函数
@@ -521,7 +521,7 @@ function getCounter(): Counter {
 
 TypeScript 的接口支持声明合并。如果在同一个作用域内多次声明同一个接口，TypeScript 会将它们合并为单个接口。
 
-```javascript
+```typescript
 // 定义接口 Box
 interface Box {
     height: number;
@@ -564,7 +564,7 @@ let box: Box = { height: 5, width: 6 };
 
 在下面的代码， `someValue` 的类型是 `any`，但是我们知道它实际上是一个字符串。我们使用类型断言 `<string>someValue` 来告诉 TypeScript，`someValue`  应该被视为 `string` 类型。
 
-```javascript
+```typescript
 // 定义了一个 someValue 变量，类型是 any 
 // 在 ts 看来，这个类型就已经不安全了，可以对它进行任何的操作
 let someValue: any = "this is a string";
@@ -579,7 +579,7 @@ let strLength: number = (<string>someValue).length;
 
 上述的 尘括号 语法在 JSX 中会产生理解上的困扰，所以我们还可以使用 as 语法。
 
-```javascript
+```typescript
 let someValue: any = "this is a string";
 let strLength: number = (someValue as string).length;
 ```
@@ -607,7 +607,7 @@ let strLength: number = (someValue as string).length;
 
 在下面的代码中， `value` 是一个可能为 null 的字会串类型，虽然我们是显示注解的，但实际开发中不停的调用某个函数或者回调函数，参数再传递的过程中也会被推断为 undefined 或 null。此时使用 `!` 之后，就相当于告诉 TypeScript `value` 在这里不会是 `null` 。那么它就会被当做是 `string` 类型。
 
-```javascript
+```typescript
 let value: string | null = "hello world";
 let strLength: number = value!.length;
 ```
@@ -617,7 +617,7 @@ let strLength: number = value!.length;
 1. 与可选链结合：当我们使用可选链 (`?.`) 但确定表达式的值存在时，可以通过非空断言来避免额外的 `undefined` 检查
 2. 在严格的空检查下断言存在：在 TypeScript 的严格模式下，即使我们知道某个值不会是`null` 或 `undefined` ，编译器也可能无法推断出来。此时我们就可以使用非空断言。
 
-```javascript
+```typescript
 let obj: { a?: { b: string } } = { a: { b: "hello" } };
 
 // 因为 a 是一个可选属性，所以 obj.a 时 可能拿到的是 undefined 
@@ -639,7 +639,7 @@ let b: string = obj.a!.b;  // 非空断言，确认 a 存在
 
 `typeof` 守卫用于基本类型检查（如 `string`、`number`、`boolean`、`symbol`）
 
-```javascript
+```typescript
 function padLeft(value: string | number) {
   // value 是一个不明确的类型，在使用的时候为了保证类型安全
   // 我们可以通过 typeof 来完成
@@ -655,7 +655,7 @@ function padLeft(value: string | number) {
 
 该守卫一般用于类的实例检查
 
-```javascript
+```typescript
 class Bird {
     fly() {}
 }
@@ -677,7 +677,7 @@ function getSmallPet(pet: Bird | Fish) {
 
 **03 自定义守卫**
 
-```javascript
+```typescript
 function isFish(pet: Bird | Fish): pet is Fish {
   // 01 pet 是一个联合类型
   // 02 使用 as 将它断言为 Fish
@@ -696,7 +696,7 @@ if (isFish(pet)) {
 
 **04 字面量类型守卫**
 
-```javascript
+```typescript
 type Shape = Circle | Square;
 
 interface Circle {
@@ -721,7 +721,7 @@ function getArea(shape: Shape) {
 
 **05 `in` 操作符**
 
-```javascript
+```typescript
 
 function move(pet: Bird | Fish) {
   if ("fly" in pet) {
@@ -742,7 +742,7 @@ function move(pet: Bird | Fish) {
 
 **01 基本语法**
 
-```javascript
+```typescript
 // 如果 value 为 undefined 或 null 则会返回 defaultValue
 const result = value ?? defaultValue;
 ```

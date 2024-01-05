@@ -2,7 +2,7 @@
 
 `Partial` 是一个内置的泛型工具类，它将一个类型的所有属性转换为可选的，`Partial` 类型的实现使用了映射类型和条件类型的特点。
 
-```javascript
+```typescript
 type Partial<T> = {
   [P in keyof T]?: T[P];
 };
@@ -17,7 +17,7 @@ type Partial<T> = {
 
 **示例**
 
-```javascript
+```typescript
 // 假设我们有以下接口
 interface Person {
   name: string;
@@ -37,7 +37,7 @@ let person: PartialPerson = {
 
 它将一个类型的所有属性从可选变为必需的。 `Required` 类型的实现利用了映射类型，它遍历一个类型的所有属性。并移除它们的可选性
 
-```javascript
+```typescript
 type Required<T> = {
   [P in keyof T]-?: T[P];
 };
@@ -52,7 +52,7 @@ type Required<T> = {
 
 **示例**
 
-```javascript
+```typescript
 // 假设我们有如下接口，其中一些属性本身是可选的
 interface Person {
   name: string;
@@ -73,7 +73,7 @@ let person: RequiredPerson = {
 
 Readonly 用于将一个类型的所有属性设置为只读。这意味着一旦一个对象被创建，它的这些属性就不能被修改。 `Readonly` 类型的实现同样通过映射类型来实现
 
-```javascript
+```typescript
 type Readonly<T> = {
   readonly [P in keyof T]: T[P];
 };
@@ -88,7 +88,7 @@ type Readonly<T> = {
 
 **示例**
 
-```javascript
+```typescript
 // 定义一个 Person ，它的属性们本身是可以修改的
 interface Person {
   name: string;
@@ -110,7 +110,7 @@ person.name = "Bob";
 
 `Record<K, T>` 用于创建一个对象类型，其属性键为 `K` 类型，属性值为 `T` 类型。`Record` 类型的实现利用了映射类型，它遍历键类型 `K` 的所有可能值，并将它们映射到值类型 `T`
 
-```javascript
+```typescript
 type Record<K extends keyof any, T> = {
   [P in K]: T;
 };
@@ -126,7 +126,7 @@ type Record<K extends keyof any, T> = {
 
 在下面的代码中，`StringDictionary` 是一个对象类七里，它的属性键为 `string` 类型，每个属性的值也是 `string` 类型。
 
-```javascript
+```typescript
 // 创建具有特定值类型的对象
 type StringDictionary = Record<string, string>;
 const dict: StringDictionary = {
@@ -138,7 +138,7 @@ const dict: StringDictionary = {
 
 **示例2**
 
-```javascript
+```typescript
 // 映射枚举类型到值类型
 enum Color {
   Red,
@@ -159,7 +159,7 @@ const colorNames: ColorMap = {
 
 `Pick<T, K>` 用于从类型 `T` 中挑选一组属性 `K`, 从而构造一个新的类型，这种类型的实现使用了映射类型和键的子集
 
-```javascript
+```typescript
 
 // 限制 K 必需来自于 T
 type Pick<T, K extends keyof T> = {
@@ -176,7 +176,7 @@ type Pick<T, K extends keyof T> = {
 
 **示例**
 
-```javascript
+```typescript
 interface Person {
   name: string;
   age: number;
@@ -198,7 +198,7 @@ const person: PersonNameAndAge = {
 
 `Omit<T, K>` 功能和 Pick 刚好相反，用于从类型 `T` 中剔除一组属性 `K` ，从而构造一个新的类型。
 
-```javascript
+```typescript
 type Omit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>>;
 ```
 
@@ -211,7 +211,7 @@ type Omit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>>;
 
 **示例**
 
-```javascript
+```typescript
 interface Person {
   name: string;
   age: number;
@@ -232,7 +232,7 @@ const person: PersonWithoutAddress = {
 
 `Exclude<T, U>` 用于从类型 T 中排除那些可以赋值给类型 U 的类型
 
-```javascript
+```typescript
 type Exclude<T, U> = T extends U ? never : T;
 ```
 
@@ -246,7 +246,7 @@ type Exclude<T, U> = T extends U ? never : T;
 
 **示例**
 
-```javascript
+```typescript
 type AllTypes = string | number | boolean;
 type StringOrBoolean = string | boolean;
 
@@ -259,7 +259,7 @@ type JustNumber = Exclude<AllTypes, StringOrBoolean>;
 
 `NonNullable<T>` 用于从类型 `T` 中排除 `null` 和 `undefined` ，这是一种条件类型的应用，它确保类型 `T` 不包含 `null` 或 `undefined`。
 
-```javascript
+```typescript
 type NonNullable<T> = T extends null | undefined ? never : T;
 ```
 
@@ -272,7 +272,7 @@ type NonNullable<T> = T extends null | undefined ? never : T;
 
 **示例**
 
-```javascript
+```typescript
 type MaybeString = string | null | undefined;
 
 // 使用 NonNullable 排除 null 和 undefined
@@ -284,7 +284,7 @@ type StringOnly = NonNullable<MaybeString>;
 
 `InstanceType<>` 用于获取构造函数类型 T 的实例类型，这是一种高级类型的应用，它使用到了条件类型和类型推断
 
-```javascript
+```typescript
 type InstanceType<T extends new (...args: any[]) => any> = T extends new (...args: any[]) => infer R ? R : any;
 ```
 
@@ -298,7 +298,7 @@ type InstanceType<T extends new (...args: any[]) => any> = T extends new (...arg
 
 **示例**
 
-```javascript
+```typescript
 class MyClass {
   constructor(public name: string) {}
 }

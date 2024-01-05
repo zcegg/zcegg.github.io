@@ -6,14 +6,14 @@ TS 中，条件类型是一种高级类型，它允许我们依据条件表达�
 
 条件类型的基本语法如下，下面代码中 `T extends U` 是一个类型检查，用于检查 `T` 是否可以赋值给 `U`。如果条件为真则类型为 `X`，否则类型为 `Y`
 
-```javascript
+```typescript
 // 如果 T 兼容 U 则返回 X，否则返回 Y
 type ConditionalType = T extends U ? X : Y;
 ```
 
 **02 基本条件类型**
 
-```javascript
+```typescript
   type IsNumber<T> = T extends number ? "YES" : "NO"
   type Result1 = IsNumber<number>; // "yes"
   type Result2 = IsNumber<string>; // "no"
@@ -21,7 +21,7 @@ type ConditionalType = T extends U ? X : Y;
 
 **03 条件类型与泛型结合**
 
-```javascript
+```typescript
 
 // 联合类型遇到 extends 之后会进行类型分发
 type Filter<T, U> = T extends U ? T : never;
@@ -35,7 +35,7 @@ type NumbersOnly = Filter<string | number | boolean, number>;
 
 在泛型中使用条件类型时，如果传入的是一个联合类型，那么条件类型分被分布应用到联合类型的每个成员上。
 
-```javascript
+```typescript
 type NonNullable<T> = T extends null | undefined ? never : T;
 
 // 结果类型是 string | number
@@ -47,7 +47,7 @@ type StringOrNumber = NonNullable<string | number | undefined>;
 
 `infer` 关键字用于在条件类型中声明一个类型变量，可以在条件的真分支中引用。
 
-```javascript
+```typescript
 // (...args: any[]) => infer R 
 // 上面的语法中 R 是一个类型变量， infer R 让 TS 推断 R 的类型
 // 而 R 就是当前函数的返回值类型，在我们调用时传入 T 的类型之后
@@ -63,7 +63,7 @@ type ExampleType = ReturnType<() => string>;
 
 条件类型可以被用于构建复杂的类型约束和关系
 
-```javascript
+```typescript
 type TypeName<T> =
   T extends string ? "string" :
   T extends number ? "number" :
@@ -84,7 +84,7 @@ type T1 = TypeName<string[]>;  // "object"
 
 可以使用 `export` 关键字导出变量、函数、类、接口等，也可以使用命名导出的方式导出多个成员
 
-```javascript
+```typescript
 // 导出 函数 add
 export function add(x: number, y: number): number {
   return x + y;
@@ -100,7 +100,7 @@ export function subtract(x: number, y: number): number {
 
 使用 `import` 关键字从其它模块中导入功能
 
-```javascript
+```typescript
 // app.ts
 import { add, subtract } from "./mathUtils";
 
@@ -110,7 +110,7 @@ console.log(subtract(5, 3)); // 输出: 2
 
 也可以使用星号 `*` 导入模块中的所有导出
 
-```javascript
+```typescript
 // app.ts
 import * as MathUtils from "./mathUtils";
 
@@ -122,7 +122,7 @@ console.log(MathUtils.subtract(5, 3)); // 输出: 2
 
 每个模块可以有一个 `default` 导出，默认导出使用 `default` 关键字标记
 
-```javascript
+```typescript
 // calculator.ts
 // 每个模块可以有一个默认的 default 导出，可以是 类、函数等
 export default class Calculator {
@@ -134,7 +134,7 @@ export default class Calculator {
 
 使用默认导出时，不需要花括号
 
-```javascript
+```typescript
 // app.ts
 // 默认导出，直接使用名称即可
 import Calculator from "./calculator";
@@ -147,7 +147,7 @@ console.log(calc.add(5, 3)); // 输出: 8
 
 可以使用 `export` 从其它模块重新导出功能，常用于创建单一的入口点
 
-```javascript
+```typescript
 // index.ts
 // 从 mathUtils 中导入 add 和 subtract 然后再导出
 export { add, subtract } from "./mathUtils";
@@ -158,7 +158,7 @@ export { default as Calculator } from "./calculator";
 
 然后可以从 `index.ts` 统一导入所有的需要的功能
 
-```javascript
+```typescript
 // app.ts
 import { add, Calculator } from "./index";
 
@@ -178,7 +178,7 @@ const calc = new Calculator();
 
 使用 `namespace` 关键字来声明一个命名空间，命名空间可以包含子命名空间、类、接口、函数、和变量
 
-```javascript
+```typescript
 namespace MathUtilities {
   export function add(x: number, y: number): number {
     return x + y;
@@ -194,7 +194,7 @@ namespace MathUtilities {
 
 要在同一个文件内使用命名空间中的成员，直接使用命名空间的名称加点符号（`.`）访问。
 
-```javascript
+```typescript
 // 命名空间.成员属性名
 let result = MathUtilities.add(5, 3);
 console.log(result); // 输出: 8
@@ -204,7 +204,7 @@ console.log(result); // 输出: 8
 
 命名空间可以嵌套在其它命名空间中
 
-```javascript
+```typescript
 
 // namespace 定义命名空间
 // 自定义命名空间名称
@@ -227,7 +227,7 @@ console.log(area); // 输出: 25
 
 大型命名空间可以分割成多个文件，使用 `/// <reference path="...." />` 指令来引用其它文件中的命名空间
 
-```javascript
+```typescript
 // MathUtilities.ts
 namespace MathUtilities {
   export function add(x: number, y: number): number {
@@ -253,7 +253,7 @@ namespace MathUtilities {
 
 声明文件通常包含 `declare` 关键字的使用，它用于声明 变量、函数、类或者任何其它类型的结构，而不实际定义它们的实现。
 
-```javascript
+```typescript
 // example.d.ts
 declare function exampleFunction(a: number, b: number): number;
 declare class ExampleClass {
@@ -266,7 +266,7 @@ declare class ExampleClass {
 
 使用 `declare var` 来描述一个全局变量的类型
 
-```javascript
+```typescript
 // globals.d.ts
 declare var myGlobalVar: number;
 
@@ -278,7 +278,7 @@ console.log(myGlobalVar); // 可以使用 myGlobalVar
 
 声明文件也可以声明类及其属性和方法
 
-```javascript
+```typescript
 // MyClass.d.ts
 declare class MyClass {
   constructor(message: string);
@@ -293,7 +293,7 @@ console.log(myClassInstance.greet()); // 正确
 
 接口在声明文件中非常有用，尤其是描述对象字面量的结构
 
-```javascript
+```typescript
 // interface.d.ts
 declare interface MyInterface {
     myProperty: string;
@@ -313,7 +313,7 @@ let obj: MyInterface = {
 
 当我们需要提供对外部模块（如 npm包）的类型声明时，可以使用 `declare module`。
 
-```javascript
+```typescript
 // node_modules/someLibrary/index.d.ts
 declare module "someLibrary" {
   export function someFunction(a: number): number;
@@ -326,7 +326,7 @@ someFunction(5);
 
 例如 JQuery 声明文件，假设我们正在使用 JQuery， TS 需要知道 Jquery 的 `$` 变量的类型。
 
-```javascript
+```typescript
 // jquery.d.ts
 // 声明一个全局的变量  $，类型为 JQueryStatic
 declare var $: JQueryStatic;
@@ -337,7 +337,7 @@ $("#myId").fadeIn();
 
 例如 node.js 的内置模块，如 `fs` ，TS 有官方的类型声明文件
 
-```javascript
+```typescript
 // 使用
 import * as fs from "fs";
 
@@ -347,7 +347,7 @@ fs.readFileSync("path/to/file", "utf8");
 
 TS 提供了许多内置的类型声明，如 `Promise` `Array` `NodeList` 等
 
-```javascript
+```typescript
 let promise: Promise<string>;
 promise = new Promise((resolve, reject) => {
   resolve("Hello, TypeScript!");
@@ -371,7 +371,7 @@ let nodeList: NodeList = document.querySelectorAll("div");
 
 自定义声明文件通常具有 `.d.ts` 扩展名，在这个文件中，我们可以使用 `declare` 关键字来告诉 TS 一些全局变量的类型
 
-```javascript
+```typescript
 // someLibrary.d.ts
 // 声明一个全局的函数
 declare function myFunction(a: number, b: number): number;
@@ -383,7 +383,7 @@ declare const myVariable: number;
 
 如果我们的 JS 库有一个全局函数，我们可以这样声明它
 
-```javascript
+```typescript
 // calculator.d.ts
 declare function add(a: number, b: number): number;
 
@@ -395,7 +395,7 @@ const sum = add(1, 2); // 正确
 
 对于库中的类，我们可以声明它的构造函数和方法
 
-```javascript
+```typescript
 // greeter.d.ts
 declare class Greeter {
   constructor(greeting: string);
@@ -411,7 +411,7 @@ console.log(greeter.greet()); // 输出: "Hello"
 
 如果一个库是一个模块，我们可以这样声明它的导出
 
-```javascript
+```typescript
 // node_modules/my-lib/index.d.ts
 declare module "my-lib" {
   export function myLibFunction(a: number): number;
@@ -427,7 +427,7 @@ myLibFunction(10);
 
 有时，库使用了全局命名空间，我们可以这样声明它
 
-```javascript
+```typescript
 // utils.d.ts
 declare namespace Utils {
   function calculateDistance(x: number, y: number): number;
@@ -441,7 +441,7 @@ const distance = Utils.calculateDistance(10, 5);
 
 有时候我们需要扩展全局对象，比如 `window`
 
-```javascript
+```typescript
 // global.d.ts
 declare global {
   interface Window {
@@ -474,7 +474,7 @@ window.myGlobalFunction()
 - outDir：指定输出目录，编译后的文件将放置在这里
 - sourceMap：是否生成源代码映射文件（.map文件），用于调试
 
-```javascript
+```typescript
 {
   "compilerOptions": {
     "target": "es5",
@@ -493,7 +493,7 @@ window.myGlobalFunction()
 1. include：指定一个文件模式列表，编译器将包含这些模式匹配的文件
 2. exclude：指定一个文件模式列表，编译器将排除这些械式匹配的文件
 
-```javascript
+```typescript
 {
   "include": [
     "src/**/*"
@@ -509,7 +509,7 @@ window.myGlobalFunction()
 
 如果我们只想编译项目中的特定文件，可以使用 `files` 属性明确指定这些文件
 
-```javascript
+```typescript
 {
   "files": [
     "core.ts",
@@ -522,7 +522,7 @@ window.myGlobalFunction()
 
 该属性用于指定另一个要继承的 `tsconfig.json` 文件的路径
 
-```javascript
+```typescript
 {
   "extends": "./base-config.json"
 }
@@ -532,7 +532,7 @@ window.myGlobalFunction()
 
 使用 `lib` 指定编译过程中将包含在编译环境中的库文件列表，例如，如果我们的代码运行在浏览器中，我们可能需要 DOM 类型的定义。(运行时需要依赖的库文件的类型定义文件列表)
 
-```javascript
+```typescript
 {
   "compilerOptions": {
       "lib": ["dom", "es6"]
@@ -544,7 +544,7 @@ window.myGlobalFunction()
 
 这个选项用于在不生成输了文件的情况下运行编译器，通常用于仅检查类型错误
 
-```javascript
+```typescript
 {
   "compilerOptions": {
     "noEmit": true
@@ -556,7 +556,7 @@ window.myGlobalFunction()
 
 如果我们在项目中使用 JSX(如 React) ，需要设置 `jsx` 选项来指定 JSX 代码的编译方式
 
-```javascript
+```typescript
 {
   "compilerOptions": {
     "jsx": "react"
@@ -568,7 +568,7 @@ window.myGlobalFunction()
 
 设置为 `true` 时，任何隐式 `any` 类型都会导致编译错误，这有助于确保所有变量的类型都是显式声明，提高代码的类型安全。
 
-```javascript
+```typescript
 {
     "compilerOptions": {
         "noImplicitAny": true
@@ -580,7 +580,7 @@ window.myGlobalFunction()
 
 当设置为 `true` 时，将对 `null` 和 `undefined` 进行严格检查，从而避免许多常见的运行时错误
 
-```javascript
+```typescript
 {
   "compilerOptions": {
     "strictNullChecks": true
@@ -592,7 +592,7 @@ window.myGlobalFunction()
 
 启用该选项后，可以允许默认导入与非 ECMAScript 模块之间的互操作性，在这处理某些第三方库时非常有用。
 
-```javascript
+```typescript
 {
   "compilerOptions": {
     "esModuleInterop": true
@@ -616,7 +616,7 @@ window.myGlobalFunction()
 
 用于配置模块解析方式，特别是在有复杂的项目结构时
 
-```javascript
+```typescript
 {
   "compilerOptions": {
     "baseUrl": ".",

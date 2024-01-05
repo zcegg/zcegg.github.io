@@ -32,7 +32,7 @@ TypeScript试图通过引入 静态类型、接口、命名空间等特性来解
 
 1. **JSDoc 注释**： JSDoc 是一种用于 JavaScript 的注释风格，可以添加对函数参数和返回值的类型注释。虽然这并不是严格的静态类型检查，但许多编辑器和工具（如VSCode和TypeScript）可以使用这些注释提供类型提示。
 
-```javascript
+```typescript
 /**
  * @param {string} name
  * @param {number} age
@@ -45,7 +45,7 @@ function greet(name, age) {
 
 2. **Flow**： Flow 是由 Facebook 开发的静态类型检查工具，可以通过类型注释来为 JavaScript 代码添加静态类型检查。Flow 可以检测潜在的类型错误并提供类型提示。
 
-```javascript
+```typescript
 // @flow
 function greet(name: string, age: number): string {
     return "Hello, " + name + "! You are " + age + " years old.";
@@ -54,7 +54,7 @@ function greet(name: string, age: number): string {
 
 3. **TypeScript**： TypeScript 是 JavaScript 的超集，它添加了静态类型支持。可以将 TypeScript 编写的代码编译为纯 JavaScript，并且 TypeScript 提供了更丰富的类型系统。
 
-```javascript
+```typescript
 function greet(name: string, age: number): string {
     return "Hello, " + name + "! You are " + age + " years old.";
 }
@@ -70,7 +70,7 @@ TypeScript是一种由Microsoft开发的开源编程语言，它是JavaScript的
 
 TypeScript引入了静态类型，开发时可以在声明变量、函数参数和返回值等地方添加类型注解。这样在编译时就能发现类型相关的错误，提高了代码的可靠性和可维护性
 
-```javascript
+```typescript
 // 定义形参是 string类型
 // 定义函数返回值是 string 类型
 function greet(name: string): string {
@@ -82,7 +82,7 @@ function greet(name: string): string {
 
 TypeScript支持接口，可以用于定义对象的结构(形状)，提供了一种强大的方式来描述代码的契约和约束。
 
-```javascript
+```typescript
 // 定义一个接口Person，约束包含二个 key: name,age ，且限制了他们的类型
 interface Person {
     name: string;
@@ -98,7 +98,7 @@ function greet(person: Person): string {
 
 TypeScript引入了泛型，使得开发者能够编写更加灵活和可重用的代码，特别是对于集合类或函数。
 
-```javascript
+```typescript
 // 定义泛型 T ，此时不知道它的明确类型
 function identity<T>(arg: T): T {
     return arg;
@@ -149,7 +149,7 @@ TypeScript对于大型项目的支持更加出色，它提供了模块化、命�
 **三、tsc编译**
 1. 创建 ts 文件
 
-```javascript
+```typescript
 // app.ts
 function greet(name: string): string {
     return "Hello, " + name + "!";
@@ -160,12 +160,12 @@ console.log(result);
 ```
 2. 编译 TypeScript 文件
 
-```javascript
+```typescript
 tsc app.ts
 ```
 3. 运行 JavaScript 文件
 
-```javascript
+```typescript
 node app.js
 ```
 
@@ -175,7 +175,7 @@ node app.js
 
 1. 安装 ts-node
 
-```javascript
+```typescript
 // 全局安装 ts-node 包
 npm install ts-node -g
 // ts-node 依赖下述两个包也需要安装
@@ -184,7 +184,7 @@ npm install tslib @types/node -g
 2. 运行 ts 脚本
 
 
-```javascript
+```typescript
 // 在控制台中使用命令运行指定的文件
 ts-node math.ts
 ```

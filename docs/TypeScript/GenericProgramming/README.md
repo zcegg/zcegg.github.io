@@ -18,7 +18,7 @@ TS 中的泛型是一种强大的工具，允许我们在定义函数、类或�
 - 清晰的意图：使用泛型可以更清楚地表达我们的代码意图，例如：一个函数接收任意类型的数组并返回该类型的元素，使用泛型就很好编写
 - 避免类型断言：在没有泛型的情况下，我们可能需要不停的使用类型断言来处理多种类型的数据。泛型避免了这种需要，并提供了一种更优雅的方式来处理不同类型的数据。
 
-```javascript
+```typescript
 // 定义 identity 接收一个泛型参数 T，返回 T 
 function identity<T>(arg: T): T {
     return arg;
@@ -39,7 +39,7 @@ TS 中的泛型提供了一种方式来创建可重用的组件，同时保持�
 
 在下面代码中 `identity` 函数能够接受任何类型的参数，并返回相同的类型。在使用时，可以明确指定 `T` 的具体类型，如 `string` 和 `number`
 
-```javascript
+```typescript
 function identity<T>(arg: T): T {
   return arg;
 }
@@ -54,7 +54,7 @@ let output2 = identity<number>(123);
 
 在下面的代码中，`GenericIndentityFn` 是一个泛型接口，它定义了一个函数签名，`identity` 函数符合这个签名，并且在使用时指定了 `number` 类型。
 
-```javascript
+```typescript
 interface GenericIdentityFn<T> {
     (arg: T): T;
 }
@@ -70,7 +70,7 @@ let myIdentity: GenericIdentityFn<number> = identity;
 
 泛型也可以用于类，但不能用于类的静态成员
 
-```javascript
+```typescript
 class GenericNumber<T> {
   zeroValue: T;
   add: (x: T, y: T) => T;
@@ -86,7 +86,7 @@ myGenericNumber.add = function(x, y) { return x + y; };
 
 我们可以定义一个接口来描述约束，并使用这个接口和 `extends` 关键字来实现泛型约束。
 
-```javascript
+```typescript
 interface Lengthwise {
   length: number;
 }
@@ -102,7 +102,7 @@ function loggingIdentity<T extends Lengthwise>(arg: T): T {
 
 我们可以定义多个类型变量来创建更复杂的泛型类型
 
-```javascript
+```typescript
 function merge<U, V>(obj1: U, obj2: V): U & V {
   return { ...obj1, ...obj2 };
 }
@@ -121,7 +121,7 @@ TS 中的泛型函数允许在函数定义时提供一种方法来确保类型�
 
 在下面的代码中 `T` 是一个类型变量，它捕获了由调用者提供的类型（例如 `string` `number` 等），然后被用作参数 `arg` 的类型和返回类型。
 
-```javascript
+```typescript
   function identity<T>(arg: T): T{
     return arg
   }
@@ -131,7 +131,7 @@ TS 中的泛型函数允许在函数定义时提供一种方法来确保类型�
 
 调用泛型函数时，可以显式地指定类型参数，也可以让 TS 编译器自动推断类型
 
-```javascript
+```typescript
 // 显式指定类型
 let outputExplicit = identity<string>("myString"); 
 
@@ -143,7 +143,7 @@ let outputInferred = identity("myString");
 
 我们可以使用 `extends` 关键字约束泛型。这意味着我们可以声明一个泛型类型必须符合某个接口或具有特定结构。
 
-```javascript
+```typescript
 
 // 定义一个接口 Lengthwise，约束对象结构有一个 length 属性
 interface Lengthwise {
@@ -162,7 +162,7 @@ function loggingIdentity<T extends Lengthwise>(arg: T): T {
 
 泛型函数可以有多个类型变量，这为创建复杂的函数提供了灵活性
 
-```javascript
+```typescript
 // 返回值是 T 与 U 的交叉类型
 function merge<T, U>(arg1: T, arg2: U): T & U {
   return { ...arg1, ...arg2 };
@@ -173,7 +173,7 @@ function merge<T, U>(arg1: T, arg2: U): T & U {
 
 我们可以为泛型类型提供默认类型，以便在不显式指定类型时使用
 
-```javascript
+```typescript
 // 定义类型 T 时，设置一个默认类型 string 
 function createArray<T = string>(length: number, value: T): T[] {
   return new Array(length).fill(value);
@@ -184,7 +184,7 @@ function createArray<T = string>(length: number, value: T): T[] {
 
 在一个情况下，TS 可以依据传递给泛型函数的参数自动推断出类型变量的类型
 
-```javascript
+```typescript
 // 将来在我们调用 combine 方法的时候可以不用显式的传入固定的类型
 // 只需要传入具体的 arr1 arr2 ，TS 会自动推断出类型变量 T 的类型
 function combine<T>(arr1: T[], arr2: T[]):T[]{
@@ -196,7 +196,7 @@ function combine<T>(arr1: T[], arr2: T[]):T[]{
 
 我们可以定义泛型函数类型，用于声明函数的类型
 
-```javascript
+```typescript
 // 下面的语法就是之前提过的 函数调用签名
 // 表示被该接口约束的变量是一个可调用的类型
 interface GenericFunction<T>{
@@ -212,7 +212,7 @@ interface GenericFunction<T>{
 
 泛型接口的定义与普通接口相似，但在接口名称后添加 `<T>`（或其它字母），其中 `T` 是类型变量。
 
-```javascript
+```typescript
 // 约束接口包含属性 value，使用类型变量 T 来约束 value 的类型
 // 约束接口包含 getValue，它是一个函数类型，且返回值是 T 的类型
 interface GenericInterface<T> {
@@ -225,7 +225,7 @@ interface GenericInterface<T> {
 
 实现泛型接口 时，需要指定泛型类型，或允许 TS 推断类型
 
-```javascript
+```typescript
 // 定义了一个 MyClass 类，它实现了 GenericInterface
 // 显式的给泛型变量 T 赋值为 number 类型
 // 实现接口中的约束，定义 value 与 getValue
@@ -243,7 +243,7 @@ console.log(myInstance.getValue()); // 输出: 10
 
 只要使用了泛型，泛型约束语法就需要考虑，不论是泛型用在哪里。因为我们往往需要限制类型变量的范围
 
-```javascript
+```typescript
 interface Lengthwise {
   length: number;
 }
@@ -258,7 +258,7 @@ interface GenericInterface<T extends Lengthwise> {
 
 泛型接口同样可以包含多个类型变量，使得接口能够处理多个相关联的泛型类型
 
-```javascript
+```typescript
 interface Pair<K, V> {
   key: K;
   value: V;
@@ -269,7 +269,7 @@ interface Pair<K, V> {
 
 泛型接口还可以定义泛型函数的类型
 
-```javascript
+```typescript
 // 使用接口定义一个函数调用签名，使用类型变量 T
 interface GenericFunction<T> {
   (arg: T): T;
@@ -286,7 +286,7 @@ let myFunction: GenericFunction<number> = function(arg) {
 
 这个在泛型函数中也见到了，就是要说明泛型本身具备的默认值语法
 
-```javascript
+```typescript
 interface GenericInterface<T = string> {
   value: T;
   getValue: () => T;
@@ -301,7 +301,7 @@ interface GenericInterface<T = string> {
 
 泛型类在类名后添加 `<T>`,其中 `T` 作为类型变量在整个类中使用
 
-```javascript
+```typescript
 // 在类名后设置一个类型变量 T ，在类的内部都可以直接使用
 class GenericClass<T> {
   // 使用 T 约束类的实例属性类型
@@ -323,7 +323,7 @@ class GenericClass<T> {
 
 创建泛型类的实例时，可以显式的指定类型，也可以使和 TS 的类型推断
 
-```javascript
+```typescript
 let myInstance = new GenericClass<string>("Hello");
 console.log(myInstance.getValue()); // 输出: "Hello"
 ```
@@ -332,7 +332,7 @@ console.log(myInstance.getValue()); // 输出: "Hello"
 
 可以对泛型类型使用约束，用来限制可以用作类型参数的类型
 
-```javascript
+```typescript
 interface Lengthwise {
   length: number;
 }
@@ -356,7 +356,7 @@ class GenericClass<T extends Lengthwise> {
 
 泛型类可以定义多个类型参数，提供更大的灵活性和表达能力
 
-```javascript
+```typescript
 // 可以在类名的后面跟上一个或者任意多个类型变量
 // 然后在类的内部去使用这些类型变量
 class KeyValuePair<K, V> {
@@ -374,7 +374,7 @@ class KeyValuePair<K, V> {
 
 在泛型类中，静态成员不能使用类的类型参数
 
-```javascript
+```typescript
 class GenericClass<T> {
   static staticValue: T; // 错误：静态成员不能引用类类型参数
 }
@@ -384,7 +384,7 @@ class GenericClass<T> {
 
 泛型类型也可以为类型参数提供默认类型
 
-```javascript
+```typescript
 // 默认类型，是泛型本身的语法，无论是用在类、接口、还是函数或者其它地方
 class GenericClass<T = string> {
   value: T;
@@ -403,7 +403,7 @@ class GenericClass<T = string> {
 
 泛型约束通过在类型变量后添加 `extends` 关键字和一个类型来定义。这个类型可以是接口、类或者复合类型。
 
-```javascript
+```typescript
 // 定义接口类型
 interface Lengthwise {
   length: number;
@@ -421,7 +421,7 @@ function loggingIdentity<T extends Lengthwise>(arg: T): T {
 
 我们可以创建一个接口来描述约束，然后使用这个接口来约束泛型类型
 
-```javascript
+```typescript
 interface HasId {
     id: number;
 }
@@ -436,7 +436,7 @@ function findById<T extends HasId>(items: T[], id: number): T | undefined {
 
 除了接口，我们也可以使用类作为泛型约束，确何泛型类型至少具有该类的结构
 
-```javascript
+```typescript
 // 定义一个类来约束类型变量 T
 class Animal {
   name: string;
@@ -454,7 +454,7 @@ function createInstance<T extends Animal>(c: new () => T): T {
 
 使用交叉类型，可以对泛型应用多重约束
 
-```javascript
+```typescript
 interface Nameable {
   name: string;
 }
@@ -475,7 +475,7 @@ function greet<T extends Nameable & Ageable>(person: T): void {
 
 在下面的代码中，首先使用了多个类型变量 T K ，同时我们尝试对 K 进行约束。约束的类型 `keyof T`, keyof 是一个关键字可以将泛型变量 T 中的所有 key 都提取出来做为一个 `{}` 。之后我们用它做为一个类型来约束 K。这样的话就实现了 K 都来自于 T 中 key 的约束。主要是接受泛型约束中可以使用类型变量这个语法。
 
-```javascript
+```typescript
 function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {
     return obj[key];
 }
@@ -485,7 +485,7 @@ function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {
 
 在定义约束的同时，也可以为泛型变量提供默认类型
 
-```javascript
+```typescript
 // 定义了一个泛型变量 T，给它设置了默认类型 string
 // 同时设置了泛型变量 K ，限制了它的类型为 number ,同时赋默认值为 1
 function createArray<T = string, K extends number = 1>(length: K, value: T): T[] {
@@ -495,7 +495,7 @@ function createArray<T = string, K extends number = 1>(length: K, value: T): T[]
 
 **07 约束中的条件类型**
 
-```javascript
+```typescript
 // 定义一个类型 ExtractArray，接收一个泛型变量 T 
 // 判断 T 是否继承Array，如果是则推断出类型U 返回，否则 返回 T
 type ExtractArray<T> = T extends Array<infer U> ? U : T;
@@ -516,7 +516,7 @@ function firstOrValue<T>(arr: T): ExtractArray<T> {
 
 我们可以在泛型中声明多个类型变量，它们通常用逗号分隔
 
-```javascript
+```typescript
 function pair<K, V>(key: K, value: V): [K, V] {
   return [key, value];
 }
@@ -526,7 +526,7 @@ function pair<K, V>(key: K, value: V): [K, V] {
 
 就像单个泛型类型变量一样，多类型变量也可以有约束
 
-```javascript
+```typescript
 // 本质上就是多个参数，每个参数都可以有自己的约束规则
 // 在A的泛型约束中，也可以使用到B泛型变量
 function merge<T extends object, U extends object>(obj1: T, obj2: U): T & U {
@@ -540,7 +540,7 @@ function merge<T extends object, U extends object>(obj1: T, obj2: U): T & U {
 
 在下面的代码中， `mapObject` 函数接受一个对象和一个转换函数，然后对对象的每个属性应用这个函数，最后返回一个新对象。
 
-```javascript
+```typescript
 function mapObject<K extends string | number, V, U>(obj: Record<K, V>, func: (item: V) => U): Record<K, U> {
   // 使用类型将初始化的 {} 断言为我们希望的类型
   // Record 是一个内置的类型工具，可以返回指定类型
@@ -554,7 +554,7 @@ function mapObject<K extends string | number, V, U>(obj: Record<K, V>, func: (it
 
 **04 类中的多类型变量**
 
-```javascript
+```typescript
 class DataStore<K, V> {
   private data: Map<K, V> = new Map();
 
@@ -570,7 +570,7 @@ class DataStore<K, V> {
 
 **05 接口中的多类型为量**
 
-```javascript
+```typescript
 interface Pair<K, V> {
   key: K;
   value: V;
@@ -587,7 +587,7 @@ let item: Pair<number, string> = { key: 1, value: "value" };
 
 映射类型基于一个旧的类型，按照给定的规则创建一个新类型，它通常使用 `in` 关键字来遍历旧类型中的每个属性，并对其应用一个转换。
 
-```javascript
+```typescript
 
 // 使用 type 类型定义一个类型 Readonly ，它接收一个类型变量 T
 // 核心功能就是接收一个 T ，然后返回一个新的类型，所有新类型的 key 都只读
@@ -617,7 +617,7 @@ type OptionalPerson = Optional<Person>;
 
 TS 提供了一些内置的映射类型， 如 `Partial<T>` `Readonly<T>` `Record<T>` 等。
 
-```javascript
+```typescript
 type PartialPerson = Partial<Person>; // 所有属性变为可选
 type ReadonlyPerson = Readonly<Person>; // 所有属性变为只读
 ```
@@ -628,7 +628,7 @@ type ReadonlyPerson = Readonly<Person>; // 所有属性变为只读
 
 在下面的代码中，`NullableProperties` 将一个类型的所有属性转换为原类型或 null
 
-```javascript
+```typescript
 
 interface Person {
   name: string;
@@ -647,7 +647,7 @@ type NullablePerson = NullableProperties<Person>;
 我们可以使用类型约束来限制映射类型中的 `in` 关键字遍历的属性
 
 下面的代码中， `StringProperties` 只将 `Person` 类型中的字符串属性保留为字符串类型，其它的类型的属性都变为 `never`类型。
-```javascript
+```typescript
 type StringProperties<T> = {
   //  T[P] extends string ? string : never 语法是 TS 中的条件类型
   // 如果 T[P] 兼容 string 类型，那么就会返回 string ，否则返回 never
@@ -661,7 +661,7 @@ type OnlyStringPerson = StringProperties<Person>;
 
 映射类型还允许我们添加或移除特定的修饰符，如 `readonly` 或 `?`
 
-```javascript
+```typescript
 type Mutable<T> = {
   // 表示移除原类型的属性只读修饰符
   -readonly [P in keyof T]: T[P];

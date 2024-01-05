@@ -2,7 +2,7 @@
 
 将类型 `T` 的所有属性变为可选，这在某些场景下还是很有用的
 
-```javascript
+```typescript
   interface Person{
     name: string
     age: number
@@ -17,7 +17,7 @@
 
 将类型 `T` 的所有属性设置为只读，这适用于我们不想更改对象属性的情况
 
-```javascript
+```typescript
 const person: Readonly<Person> = { name: "Bob", age: 30 };
 // person.name = "Alice"; // 错误：不能修改只读属性
 ```
@@ -26,7 +26,7 @@ const person: Readonly<Person> = { name: "Bob", age: 30 };
 
 创建一个类型，其属性键为 `K`, 属性值类型为 `T`。可以创建一个对象，其键是特定类型且所有值都是相同类型。
 
-```javascript
+```typescript
 interface Person{
   name: string
   age: number
@@ -42,7 +42,7 @@ const people: Record<string, Person> = {
 
 从类型 `T` 中挑选一些属性来构造新的类型
 
-```javascript
+```typescript
 
 interface Person{
   name: string
@@ -58,7 +58,7 @@ const personName: PersonName = { name: "Charlie" };
 
 从类型 `T` 中排除那些可以赋值给类型 U 的类型。或者说从 T 中将 U 类型拿出。
 
-```javascript
+```typescript
 type NonString = Exclude<any, string>;
 const nonString: NonString = 123; // OK
 // const nonStringError: NonString = "Hello"; // 错误：不能将类型“string”分配给类型“Exclude<any, string>”
@@ -68,7 +68,7 @@ const nonString: NonString = 123; // OK
 
 获取函数类型T 的返回值类型
 
-```javascript
+```typescript
 function getUser() {
   return { name: "Daisy", age: 28 };
 }
@@ -82,7 +82,7 @@ type User = ReturnType<typeof getUser>;
 
 从类型 `T` 中去除 `K` 指定的属性，与 `Pick`功能相反
 
-```javascript
+```typescript
 
 interface Person{
   name: string
@@ -97,7 +97,7 @@ const personWithoutAge: PersonWithoutAge = { name: "Eve" };
 
 从类型 `T` 中排除 `null` 和 `undefined` 
 
-```javascript
+```typescript
 // 新的类型就只有 string 了
 type NonNullableString = NonNullable<string | null | undefined>;
 const nonNullableString: NonNullableString = "Text"; // OK
@@ -108,7 +108,7 @@ const nonNullableString: NonNullableString = "Text"; // OK
 
 获取函数类型 `T` 的参数类型构成的元组类型
 
-```javascript
+```typescript
 function greet(name: string, age: number): string {
   return `Hello, I'm ${name} and I'm ${age} years old.`;
 }
@@ -122,7 +122,7 @@ type GreetParameters = Parameters<typeof greet>; // [string, number]
 
 获取构造函数类型 `T` 的参数类型构成的元组类型，和 Parameters 类似，但是针对于构造函数
 
-```javascript
+```typescript
 class Person {
   constructor(public name: string, public age: number) {}
 }
@@ -136,7 +136,7 @@ ConstructorParameters<typeof Person>;
 
 获取构造函数类型 `T` 的实例类型 
 
-```javascript
+```typescript
 type PersonInstance = InstanceType<typeof Person>; // Person
 ```
 
@@ -144,7 +144,7 @@ type PersonInstance = InstanceType<typeof Person>; // Person
 
 将类型 `T` 的所有属性设置为必须的，这与 `Partial` 功能相反。
 
-```javascript
+```typescript
 interface PartialPerson {
   name?: string;
   age?: number;
@@ -157,7 +157,7 @@ const requiredPerson: Required<PartialPerson> = { name: "Alice", age: 30 };
 
 提取函数类型 `T` 的 `this` 参数的类型，如果没有 `this` 参数，则为 `unknow`
 
-```javascript
+```typescript
 // 在 TS 中可以在第一个参数位置上 使用 this 来确定当前函数 this 的类型
 // 该值不会做为实参传给函数调用处
 function test(this: string, num: number) {
@@ -174,7 +174,7 @@ type TestThisParameter = ThisParameterType<typeof test>;
 
 和上面的功能相反，该工具可以实现从函数类型 `T` 中移除 `this` 参数
 
-```javascript
+```typescript
 // 定义 test 时看似定义了 this 与 num
 function test(this: string, num: number) {
   return this + num;
