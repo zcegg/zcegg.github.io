@@ -224,6 +224,7 @@ COLLATE=utf8mb4_unicode_ci
 **示例**
 
 ```bash
+  SHOW CREATE DATABASE datatabase_name
   SHOW TABLES FROM database_name
   DESCRIBE database_name.table_name
 ```
@@ -231,4 +232,120 @@ COLLATE=utf8mb4_unicode_ci
 **注意**
 - 获取数据库信息的方法和可用命令会依据具体的数据库系统而有所不同
 
+## 数据表操作（DDL）
 
+### 创建数据表
+
+创建新表就是在数据库中定义新数据结构的过程
+
+**语法**
+
+```bash
+  CREATE TABLE table_name(
+    column1 datatype constraint,
+    column2 datatype constraint,
+    ......
+  )
+```
+
+**示例**
+
+```bash
+  CREATE TABLE students (
+    id INT AUTO_INCREMNT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    enrollement_data DATE
+  )
+```
+
+**注意**
+- 每个列(column) 必须有一个数据类型
+- 可以为列添加约束，如 `NOT NULL` (非空)、`PRIMARY_KEY`(主键)等。
+
+### 删除数据表
+
+删除表将移除表及其所有数据
+
+**语法**
+
+```bash
+  DROP TABLE IF EXISTS table_name;
+```
+
+**示例**
+
+```bash
+  DROP TABLE IF EXISTS students;
+```
+
+**注意**
+- `IF EXISTS` 防止在表不存在时出现语法错误
+- 此操作不可逆，所有数据将被永久删除
+
+### 修改表结构
+
+修改表结构可以添加、删除或更改列
+
+**添加列**
+
+```bash
+  # ADD 新字段 字段类型
+  ALTER TABLE table_name ADD column_name datatype;
+  # 示例
+  ALTER TABLE students ADD birth_date DATE;
+```
+
+**删除列**
+
+```bash
+  # 关键字 DROP COLUMN 字段名
+  ALTER TABLE table_name DROP COLUMN column_name
+  # 示例
+  ALTER TABLE sudents DROP COLUMN brith_date
+```
+
+**更改列**
+
+```bash
+  # MODIFY COLUMN 字段名 字段类型
+  ALTER TABLE table_name MODIFY COLUMN column_name new_type;
+  # 示例
+  ALTER TABLE students MODIFY COLUMN name VARCHAR(255)
+```
+
+**更改表名**
+
+```bash
+  # 关键字 RENAME TO 新表名
+  ALTER TABLE table_name RENAME TO new_table_name;
+  # 示例
+  ALTER TABLE students RENAME TO student_info;
+```
+
+**注意**
+- 修改表结构可能会影响现有数据
+- 在进行结构更改之前，请确保已备份表
+- 修改表名是一个立即执行的操作，一旦更改，原始的表名将不再生效
+- 在不同的数据库系统中，修改表名可能使用 `RENAME TABLE table_name TO new_table_name`
+
+### 查询表信息
+
+查询数据库中现有表的信息，如表结构
+
+**语法**
+
+```bash
+  SHOW TABLES; # 查询所有的 table 列表
+  DESCRIBE table_name; # 查询表的创建语句
+```
+
+**示例**
+
+```bash
+  SHOW TABLES;
+  DESCRIBE sutdents;
+```
+
+**注意**
+- 这些命令对于了解数据库中的表和表结构非常有用。
+- `DESCRIBE` 提供了关于表中列的详细信息，如数据类型、是否允许空值等。
