@@ -349,3 +349,160 @@ COLLATE=utf8mb4_unicode_ci
 **注意**
 - 这些命令对于了解数据库中的表和表结构非常有用。
 - `DESCRIBE` 提供了关于表中列的详细信息，如数据类型、是否允许空值等。
+
+## 数据类型
+
+MySQL 支持多种数据类型，允许我们依据数据的性质和要求选择最合适的类型。了解这些类型及其语法细节对于设计有效的数据库表结构至关重要。
+
+### 整型类型
+
+整型数据用于存储整数值。MySQL 提供了多种整型数据类型，以适应不同大小的数值范围。
+
+**01 TINYINT**
+- 存储范围：-128 到 127 （有符号），0 到 255 （无符号）
+- 用途：用于存储小一些的整数值
+- 示例：`age TINYINT UNSIGNED`
+
+**02 SMALLINT**
+- 存储范围：-32768到32767（有符号），0到65535（无符号）
+- 用途：用于存储稍大一点的整数值
+- 示例：`year SMALLINT`
+
+**03 MEDIUMINT**
+- 存储范围：-8388608 至 8388607 （有符号）， 0 至 16777215（无符号）
+- 用途：用于存储中等大小的数值
+- 示例：`population MEDIUMINT`
+
+**04 INT 或 INTEGER**
+- 存储范围：-2147483648至2147483647（有符号），0至4294967295(无符号)
+- 用途：常用的整数类型，适用于大多数需求
+- 示例：`user_id INT`
+
+**05 BIGINT**
+- 存储范围：-9223372036854775808 到 9223372036854775807（有符号），0 到 18446744073709551615（无符号）
+- 用途：用于存储非常大的整数类型值
+- 示例：`national_debt BIGINT`
+
+**语法细节**
+- 有符号与无符号：可以通过在类型后添加 `UNSIGNED` 关键字来定义无符号整数。无符号整数只能是正数或零，而有符号整数可以是正数、负数或零。
+- 自动增长：可以通过 `AUTO_INCREMENT` 关键字设置字段为自增长，常用于主键，例如 `id INT AUTO_INCRMENT PRIMARY KEY`
+
+**使用示例**
+
+```bash
+  CREATE TABLE users(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    age TINYINT UNSIGNED,
+    year_of_exprience SMALLINT,
+    score MEDIUMINT,
+    total_points BIGINT
+  )
+```
+
+- `id` ：是一个自增长的主键
+- `age`：是一个无符号的 `TINYINT` 类型，适用于存储年龄
+- `year_of_experience`：使用 `SMALLINT` 存储工作年数
+- `score`：使用 `MEDIUMINT` 存储可能的中等数值
+- `total_points`：使用 `BIGINT` 存储可能的很大的数值
+
+### 日期类型
+
+日期和时间类型用于存储日期和时间信息。这些类型提供了灵活的方式来存储和操作日期和时间数据。
+
+**01 DATE**
+- 存储格式：`YYYY-MM-DD`（年-月-日）
+- 用途：仅用于存储日期，不包括时间
+- 示例：`birth_date DATE`
+
+**02 TIME**
+- 存储格式：`HH:MM:SS`（小时：分钟：秒）
+- 用途：仅用于存储时间，不包括日期
+- 示例：`start_time TIME`
+
+**03 DATETIME**
+- 存储格式：`YYYY-MM-DD HH:MM:SS`（年-月-日 小时：分钟：秒）
+- 用途：用于存储日期和时间
+- 示例：`appointment DATETIME`
+
+**04 TIMESTAMP**
+- 存储格式：`YYYY-MM-DD HH:MM:SS`，通常用于记录时间戳
+- 特点：`TIMESTAMP` 值在存储时会转换为 UTC 时间，在检索时转换回当前时区的时间。
+- 用途：常用于记录数据的创建和更新时间
+
+**05 YEAR**
+- 存储格式：`YYYY`
+- 用途：仅用于存储年份
+- 示例：`graduation_year YEAR`
+
+**语法细节**
+- 在使用 `DATETIME` 和 `TIMESTAMP` 时，通常 `TIMESTAMP` 用于记录数据的修改创建时间，因为它会自动设置为当前的时间戳
+- `TIMESTAMP` 类型也适用于存储那些需要时区转换的时间值
+- `DATE` 和 `TIME` 类型更专注于存储单独的日期和时间值
+
+**示例代码**
+
+```bash
+  CREATE TABLE events (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    event_date DATE,
+    start_time TIME,
+    end_time TIME,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  )
+```
+  
+- `event_data` 用于存储事件的日期
+- `start_time` 和 `end_time` 用于存储事件的开始和结束时间
+- `created_at` 是一个 `TIMESTAMP` 类型，自动设置为记录创建的时间
+
+### 布尔类型
+
+在 MySQL 中，没有专门的布尔(Boolean) 数据类型，但是可以使用 `TINYINT` 类型来表示布尔值，标准的做法是使用 `TINYINT(1)`，其中 `0` 表示 `FALSE`，非零值（通常是 `1`）表示 `TRUE`
+
+**示例**
+
+在下面这的代码中 `isActive` 字段用于表示用户是否处理活跃状态。它被定义为 `TINYINT(1)`，以模拟布尔值。
+
+```bash
+  CREATE TABLE users(
+    id INT AUTO_INCRMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    isActive TINYINT(1) NOT NULL
+  )
+```
+
+**插入布尔值数据**
+
+```bash
+  INSERT INTO users (id, name, isActive) VALUES ('syy', 1)
+  INSERT INTO users (id, name, isActive) VALUES ('tu', 0)
+```
+
+在这些插入操作中，`1` 用于表示 `true` （即 syy 是活跃用户）， 而 `0` 用于表示 `false` （即 tu 不是活跃用户）。
+
+**查询布尔类型字段**
+
+在查询布尔类型字段时，我们可以直接使用 `0` 和 `1` 来进行比较
+
+```bash
+  # 这个查询将返回所有 isActive 字段值为 1（即真）的记录
+  SELECT * FROM users WHERE isActive = 1;
+```
+
+**注意事项**
+- 在 MySQL 中，布尔值实质上是 `TINYINT` 类型。虽然我们可以使用 `BOOLEAN` 或 `BOOL` 作为列的类型，但它们只是 `TINYINT(1)` 的别名。
+- 在处理布尔值时，建议使用 `0` 和 `1` 来保持清晰和一致性。
+
+
+### 浮点类型
+
+### 枚举类型
+
+### 定点类型
+
+### 文本类型
+
+### 字符类型
+
+### 集合类型
