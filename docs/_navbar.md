@@ -13,4 +13,4 @@
   
 * 数据库
   * [MySQL](/DataBase/)
-    * [MySQL核心操作](/DataBase/MySQL/Foundation/)
+    * [MySQL基础](/DataBase/MySQL/Foundation/)

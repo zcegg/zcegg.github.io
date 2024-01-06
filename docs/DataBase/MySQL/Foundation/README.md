@@ -999,3 +999,345 @@ MySQL 中的数据完整性是指确保数据的准确性、一致性和可靠�
 ```
 
 这些约束在数据库设计中非常重要，因为通过他们帮助维护数据的一致性、准确性和可靠性。正确使用这些约束可以大大提高数据库的整体质量和性能。
+
+## 数据查询操作（DQL）
+
+在 MySQL 中，数据查询操作主要是通过 `SELECT` 语句来完成，它属于数据查询语言（DQL）。 `SELECT` 语句用于从一个或多个表中检索数据，可以指定条件来筛选结果，还可以对结果进行排序和分组。
+
+### `SELECT`语句
+
+**语法**
+```bash
+  # 这将 table_name 表中选择 column1 column2 等列
+  SELECT column1, column2,... FROM table_name；
+```
+
+**示例**
+
+```bash
+  # 将列出 students 表中所有记录的 name 和 age 列
+  SELECT name, age FROM students;
+```
+
+### 条件过滤 `WHERE子句`
+
+**语法**
+```bash
+  # WHERE 子句指定条件，只返回满足条件的记录
+  SELECT column1, column2, ....
+  FROM table_name
+  WHERE condition;
+```
+
+**示例**
+
+```bash
+  # 将 student 表中 age 大于或等于 18 的学生 name 和 age
+  SELECT name, age
+  FROM students
+  WHERE age >= 18;
+```
+
+### 排序（`ORDER BY` 子句）
+
+**语法**
+
+```bash
+  # ORDER BY 子句用于对结果集进行排序，ASC 表示升序，DESC 表示降序
+  SELECT column1, column2, ......
+  FROM table_name
+  ORDER BY column1 [ASC|DESC], colum2 [ASC|DESC], ....;
+```
+
+**示例**
+
+```bash
+  # 列出所有学生，并按 age 降序排列
+  SELECT name, age 
+  FROM students
+  ORDER BY age DESC;
+```
+
+### 取合函数
+
+**语法**
+
+MySQL 还提供了多种聚合函数，如 `COUNT(T)` `SUM()` `AVG()` `MIN()` `MAX()` 等，用于对一系列值执行计算。
+
+**示例**
+
+```bash
+  # 这将返回 students 表中的记录总数
+  SELECT COUNT(*) FROM students;
+```
+
+### 分组（`GOURP BY` 子句）
+
+**语法**
+
+```bash
+  # group by 子句用于将结果集分组，然后可以对每组应用聚合函数
+  SELECT column1, COUNT(*) 
+  FROM table_name 
+  GROUP BY column1;
+```
+
+**示例**
+
+```bash
+  # 按 age 分组列出学生，并计算出每个年龄段的学生数量
+  SELECT age, COUNT(*)
+  FROM students 
+  GROUP BY age;
+```
+
+## SELECT 查询
+
+`SELECT` 语句是基本的数据查询命令，用于从一个或多个表中检索数据。
+
+**基本查询语法**
+
+```bash
+  SELECT column1, column2,......
+  FROM table_name
+```
+
+- SELECT 关键字后面跟着要检索的列名称
+- FROM 关键字后面是数据来源的表名称
+- 如果要检索表中的所有列，可以使用星号（`*`）代替列名称
+
+**示例**
+
+```bash
+  # 检索 students 表中的所有列
+  SELECT * FROM students;
+```
+
+**使用别名**
+
+可以给列或表指定一个别名（alias）以方便引用
+
+```bash
+  # 语法
+  SELECT column_name AS alias_name FROM table_name
+  # 示例
+  SELECT name AS student_name, age AS student_age FROM students;
+```
+
+**注意**
+- **避免使用 `SELECT *`**: 除非确实需要表中的所有列，否则最好指定具体的列，以提高查询效率和减少数据传输量。
+- **大小写敏感性**：在某些数据库配置中，列名和表名可能是大小写敏感的
+- **数据类型匹配**：在 WHERE 子句中，确保比较操作符左右两侧的数据类型是匹配的。
+
+## WHERE子句
+
+`WHERE` 子句用于指定筛选条件，以限制 `SELECT` `UPDATE` `DELETE` 语句操作数据行。`WHERE` 子句可以用于测试一个或多个条件，并返回满足条件的数据
+
+**基本语法**
+
+```bash
+  SELECT column1, column2,...
+  FROM table_name
+  WHERE condition
+```
+- 说明：`WHERE` 子句后面跟着一个或多个条件，用于筛选数据
+- 条件：可以是比较（如 `=` `<` `>`等）， 也可以是逻辑表达式（如：`ADN` `OR` `NOT`）
+
+**示例**
+
+```bash
+  # 这个查询将返回 `students` 表中年龄大于或等于 18 岁的学生的姓名和年龄
+  SELECT name, age
+  FROM students
+  WHERE age >= 18
+```
+
+**逻辑运算符**
+
+`WHERE` 子句可以结合逻辑运算符（如 `ADN` `OR` `NOT`）来组合多个条件。
+
+**示例**
+
+```bash
+  # 使用 AND 来连接多个条件
+  SELECT name, age
+  FROM students
+  WHERE age >= 18 AND age <= 22
+```
+
+```bash
+  # 使用 NOT 来设置条件
+  SELECT name, age 
+  FROM students
+  WHERE NOT age = 18
+```
+
+**注意**
+- **数据类型匹配**：确保 `WHERE` 子句中的条件与列的数据类型相匹配
+- **避免复杂的条件**：复杂的 `WHERE` 子句可能导致查询效率降低，尽量保持条件简单明了
+- **使用索引**：在筛选条件中使用索引列可以提高查询效率
+
+## GROUP BY子句
+
+`GROUP BY` 子句通常与聚合函数（`COUNT` `MAX` `MIN` `SUM` `AVG`等）一起使用，用于对数据集合中的记录进行分组。通过 `GROUP BY` 子句，可以对数据进行汇总，统计或其它类型的聚合操作。
+
+**基本语法**
+
+```bash
+# GROUP BY 子句后面跟着一个或多个列，指定按照这些列的值对数据进行分组
+SELECT column_name(s), aggregate_function(column_name)
+FROM table_name
+WHERE condition
+GROUP BY column_name(s)
+```
+
+**示例**
+
+假设有一个名为 `order` 的表，记录了客户的订单信息，包括客户 ID 和订单金额
+
+```bash
+# 按客户分组统计订单总额
+# 按 customer_id 对 orders 表中的记录进行分组，并计算每个客户的订单总额
+SELECT customer_id , SUM(amount)
+FROM orders
+GROUP BY customer_id;
+```
+
+**结合 WHERE子句和GROUP BY**
+
+```bash
+# 统计 2021年1月1日之后每个客户的订单数据
+SELECT customer_id, COUNT(*)
+FROM orders
+WHERE order_date > '2021-01-01'
+GROUP BY customer_id;
+```
+
+**注意**
+
+- 选择列：`SELECT` 语句中的非聚合列应该包含在 `GROUP BY` 子句中。这是因为非聚合列的值在分组中可能不是唯一的。
+- 聚合函数：`GROUP BY` 通中与聚合函数一起使用，如 `COUNT()`, `sum()`， `AVG()`, `MIN()`, `MAX()`等。
+- 排序：默认情况下 `GROUP BY` 对结果进行排序，如果不需要排序，可以使用 `ORDER BY NULL` 来提高性能。
+
+## HAVING 子句
+
+在 MySQL 中，`HAVING` 子句用于指定对 `GROUP BY` 聚合结果的筛选条件。它通常与 `GROUP BY` 子句结合使用，用来筛选满足特定条件的分组数据。`HAVING` 子句在某种程序上类似于 `WHERE` 子句，但 `WHERE` 子句在数据分组前进行筛选，而 `HAVING` 子句则是在数据分组后对聚合结果进行筛选。
+
+**基本语法**
+
+```bash
+SELECT column_name(s), aggregate_function(column_name)
+FROM table_name
+WHERE condition
+GROUP BY column_name(s)
+HAVING group_condition;
+```
+- 说明：`HAVING` 子句用于指定对分组的结果的筛选条件
+- `group_condition`：是基于聚合函数的条件表达式
+
+**示例：HAVING 筛选分组结果**
+
+假设有一个名为 `orders` 的表，记录了客户的订单信息，包括客户 ID 和订单金额
+
+```bash
+# 筛选订单总额超过一定值的客户
+# 这个查询将计算每个客户的订单总额，并只返回那些订单总额超过1000的客户
+SELECT customer_id, SUM(amount) AS total_amount
+FROM orders
+GROUP BY customer_id
+HAVING total_amount > 1000
+```
+
+**示例：结合WHERE和HAVING子句**
+
+```bash
+# 首先使用WHERE子句筛选出2021年1月1日之后的订单，然后按customer_id进行分组，并且只返回订单总额超过1000的客户
+SELECT customer_id, SUM(amount) AS total_amount
+FROM orders
+WHERE order_date > '2021-01-01'
+GROUP BY customer_id
+HAVING total_amount > 1000
+```
+
+**注意**
+- 聚合函数：`HAVING` 子句中的条件通常包含聚合函数，如 `SUM()` `AVG()` `COUNT()` `MAX()` `MIN()`等
+- 与 WHERE 区别：`WHERE` 子句在数据分组前筛选记录，而 `HAVING` 子句则在数据分组后筛选聚合结果
+- 性能考虑：在大型数据集上，`HAVING` 子句的使用可能会影响查询效率，因为它是在聚合后进行筛选
+
+## ORDER BY 子句
+
+`ORDER BY` 子句用于根据一个或多个列的值对结果集进行排序，我们可以指定排序的顺序为升序（ASC）或降序（DESC）。如果没有明确指定排序顺序，则默认为升序。
+
+**基本语法**
+
+```bash
+SELECT column1, column2, ......
+FROM table_name
+ORDER BY column1 [ASC|DESC], column2 [ASC|DESC], ...
+```
+- 说明：`ORDER BY` 子句后面跟随一个或多个列名，用于指定排序依据。`ASC` 表示升序排列，`DESC` 表示降序排列。如果省略 `ASC` `DESC`，默认为升序排序。
+
+**示例**
+
+```bash
+# 单列排序
+# 根据age列的值对students表中的数据进行降序排序
+SELECT name, age
+FROM students
+ORDER BY age DESC;
+```
+
+```bash
+# 根据grade列升序排列，并在grade相同的情况下按age降序排列students表中的数据
+SELECT name, age, grade
+FROM students
+ORDER BY grade ASC, age DESC;
+```
+
+**注意**
+- 性能考虑：特别是在处理大型数据集时，使用 `ORDER BY` 可能会影响查询性能。适当的索引可以帮助提高操作的效率。
+- NULL 值的排序：在 MySQL中，NULL 值默认被认为是最小值，并且在升序排序时排在最前面。
+- 避免过多排序列：虽然可以按多个列进行排序，但过多的排序列可能会导致性能下降，并使查询逻辑变得复杂。
+
+## LIMIT 子句
+
+`LIMIT` 子句用于限制查询结果集中的数据数量，这在处理大量数据时尤其有用。它通常用于页场景，或者当我们只需要查询结果的一部分时。
+
+**基本语法**
+
+```bash
+SELECT column1, column2,...
+FROM table_name
+LIMIT number
+```
+
+```bash
+SELECT column1, column2, ...
+FROM table_name
+LIMIT offset, number
+```
+
+- number：指定要返回的记录数
+- offset：指定从哪一行开始获取数据（第一行是 0 ）
+
+**使用LIMIT子句**
+
+```bash
+# 限制返回的记录数
+# 返回students表中的前10条记录
+SELECT name, age
+FROM students
+LIMIT 10
+```
+
+```bash
+# 从第6条记录开始（因为行数从0开始计数），返回10条记录。这在实现数据分页显示时非常有用
+SELECT name, age 
+FROM students
+LIMIT 5, 10
+```
+  
+**注意**
+- **配合 ORDER BY 使用**：`LIMIT` 经常与 `ORDER BY` 一起使用，以确保返回的记录符合特定的顺序。
+- **性能考虑**：在大型数据集上使用LIMIT时，特别是指定了较大的offset值时，可能会影响性能。适当的索引可以帮助提高查询效率
+- **分页计算**：当用于分页时，offset的值通常是当前页数减1乘以每页显示的记录数
