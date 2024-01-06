@@ -732,3 +732,270 @@ MySQL 中的集合类型 `SET`，它允许在单个列中存储多个值（从�
 - **内部表示**： `SET` 类型的值在内部表示为整数，每个项对应一个位，这意味着 `SET` 类型的操作可以非常快速，但对于人类来说可能不是很直观
 
 `SET` 类型适用于在有限预定义选项集中选择多个值的场景，如标签、属性、分类等
+
+## 数据完整性
+
+MySQL 中的数据完整性是指确保数据的准确性、一致性和可靠性的一系列措施和规则。数据完整性是数据库管理的一个关键方面，涉及到数据库的结构、规则以及操作过程，以保障存储在数据库中的数据符合特定标准和期望。
+
+### 完整性说明
+
+**1 实体完整性**
+- 定义：确保每个表有一个唯一的标识符，通中是主键
+- 作用：主键约束保证了表中每行的唯一性，防止重复记录的产生
+- 实现方式：通过定主义主键( Primary Key ) 来实现
+
+**2 域完整性**
+- 定义：确保列中的数据符合预期的类型、格式和范围
+- 作用：域完整性规则确保数据的有效性和适用性
+- 实现方式：通过数据类型定义、NOT NULL 约束，CHECK 约束（在某些数据库系统中）和默认值来实现
+
+**3 引用完整性**
+- 定义：确保表之间的关系正确，即外键的值必须在参照表的主键中存在
+- 作用：维护表之间的一致性和逻辑关系，防止孤立的记录
+- 实现方式：通过外键（Foreign Key）约束来实现
+
+**4 用户定义的完整性**
+- 定义：确保数据符合业务规则和逻辑
+- 作用：保证数据对于特定业务场景的有效性
+- 实现方式：通常通过应用程序逻辑、存储过程、触发器和自定义函数来实现
+
+**5 事务完整性**
+- 定义：确保数据库事务的 ACID 属性（原子性、一致性、隔离性、持久性）
+- 作用：保证即使在系统故障的情况下，数据库的状态也保持一致
+- 实现方式：通过数据库管理系统的事务控制机制来实现
+
+**示例**
+
+```bash
+  CREATE TABLE students (
+    id INT AUTO_INCRMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    age TINYIINT CHECK (age >= 18),
+  )
+```
+
+```bash
+  CREATE TABLE enrollments (
+    student_id INT,
+    course_id INT,
+    FOREING KEY (student_id) REFERENCES students(id)
+  )
+```
+
+### 实体完整性
+
+实体完整性主要是通过主键（Primary Key）约束来实现的。主键是一种特殊类型的数据库约束，旨在保证表中每条记录的唯一性。每个表可以有一个主键，主键列中的每个值必须是唯一的，且不允许为空（NULL）
+
+**语法**
+
+```bash
+  CREATE TABLE table_name(
+    column1 datatype PRIMARY KEY,
+    column2 datatype,
+    ......
+  )
+```
+
+或者，主键由多个列组成则
+
+```bash
+  CREATE TABLE table_name (
+    column1 datatype,
+    column2 datatype,
+    ....
+    PRIMARY KEY(column1, column2, ......)
+  )
+```
+
+**示例**
+
+```bash
+  # 单列主键
+  CREATE TABLE students (
+    student_id INT AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    age TINYINT UNSINGEN,
+    PRIMARY KEY (student_id)
+  )
+
+  # 多列主键
+  CREATE TABLE course_enrollments (
+    student_id INT,
+    course_id INT，
+    enrollment_date DATE,
+    PRIMARY KEY(student_id, course_id)
+  )
+```
+
+**注意事项**
+- 唯一性：主键列的每个值必须是唯一的，如果尝试插入重复的主键值，数据库将拒绝这个操作
+- 非空性：主键列不能包含 NULL 值
+- 自动增长：通常，主键列会与 `AUTO_INCREMENT` 属性一起使用，特别是在单列主键的情况下，这样每当插入新记录时， MySQL 会自动为主键列生一个唯一的值
+- 主键选择：在选择主键时，应考虑业务逻辑和查询性能。理想的主键应该是稳定的（即不会随时间改变）和尽可能紧凑的。
+
+### 域完整性
+
+在 MySQL 中，域完整性是通过限制表中列的数据类型和可能的值来实现的，它确保数据符合特定的格式、范围或集合。
+
+**数据类型**
+- 作用：指定列可以存储的数据类型，例如 `INT` `VARCHAR` `DATE`等
+- 示例：
+
+```bash
+  # 通过数据类型来约束某个字段类型的完整性
+  CREATE TABLE students (
+    student_id INT,
+    name VARCHAR(100),
+    birth_date DATE
+  )
+```
+
+**NOT NULL约束**
+- 作用：确保列中的数据值不能为 NULL
+- 示例：
+
+```bash
+  CREATE TABLE students (
+    student_id INT NOT NULL,
+    name VARCHAR(100) NOT NULL
+  )
+```
+
+**默认值**
+- 作用：如果在插入时没有指定列的值，则会自动使用默认值
+- 示例：
+
+```bash
+  CREATE TABLE students (
+    student_id INT NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    enrolled BOOLEAN DEFAULT FALSE
+  )
+```
+
+**CHECK 约束**
+- 版本：在 MySQL8.0.16 及之后的版本中可用
+- 作用：确保列中的数据符合特定的条件
+- 示例：
+
+```bash
+  CREATE TABLE students (
+    student_id INT,
+    age INT,
+    CHECK (age >= 18)
+  )
+```
+
+**注意**
+- **数据类型选择**: 选择适当的数据类型对于确保数据的准确性和优化存储非常重要
+- **使用 NOT NULL**:适当使用`NOT NULL`约束可以防止数据完整性问题
+- **默认值**:默认值应该谨慎选择，确保它们符合业务逻辑
+- **CHECK**:在早期版本中 MySQL, `CHECK` 约束被解析但不被强制执行，从对应的版后得到了完全支持
+
+### 引用完整性
+
+引用完整性主要通过外键（Foreign Key）约束来维护，外键是一个表中的列，它引用另一个表的主键列，外键确保参照关系的一致性和数据的完整性。防止在关联表之间出现不一致的数据。
+
+**语法**
+
+```bash
+  FOREIGN KEY (column_name) REFERENCES parent_table(parent_column_name)
+```
+- `column_name` 是当前表中的列，通常是所引用的外部数据标识符
+- `parent_table` 是包含被引用主键的表
+- `parent_column_name` 是被引用的列，这通常是另一个表的主键
+
+**示例**
+
+假设我们有两个表，一个是 students 表，另一个是 enrollments 表。在 enrollments 表中，我们希望引用 students 表中的 student_id
+
+```bash
+  CREATE TABLE students (
+    student_id INT NOT NULL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+  )
+
+  CREATE TABLE enrollments(
+    enrollment_id INT AUTO_INCRMENT PRIMARY KEY,
+    student_id INT,
+    course_name VARCHAR(100) NOT NULL,
+    FOREING KEY (student_id) REFERENCES students(students_id)
+  )
+```
+
+**注意**
+- 数据一致性：外键约束确保只能插入存在于父表中的值，维护数据的一致性
+- 删除和更新规则：可以指定当父表中的数据被删除或更改时，子表中的相应行如何响应。通过 `ON DELETE` 和 `ON UPDATE` 子句实现，常见的动作有 `CASCADE` `SET NULL`, `NO ACTION` 等。
+- 性能考虑：外键约束可能会影呼插入和更新操作的性能，因为每次操作都需要检查引用的完整性。
+- 唯一性：引用的表必须有对应的主键或唯一性，外键列引用的列在其所在的表中必须是唯一的，通常是主键名具有唯一约束的列。
+
+### 表约束总结
+
+创建新表时经常使用的约束包括主键约束、外键约束、唯一约束、非空约束和默认值。这些约束用于确保数据的完整性和一致性。
+
+**01 主键约束（PRIMARY KEY）**
+
+```bash
+  # 用于唯一标识表中的每条记录
+  # student_id 被设置为主键，它将唯一标识 students 表中的每条记录
+  CREATE TABLE students (
+    student_id INT AUTO_INCREMENT,
+    name VARCHAR(100),
+    PRIMARY KEY(student_id)
+  );
+```
+
+**02 外键约束（FOREIGN KEY）**
+
+```bash
+  # 用于定义两个表之间的关系，确保引用的完整性
+  # enrollments 表中的 student_id 和 course_id 是外键
+  CREATE TABLE enrollments (
+    enrollment_id INT AUTO_INCRMENT,
+    student_id INT,
+    course_id INT,
+    PRIMARY KEY (enrollment_id),
+    FOREIGN KEY (student_id) REFERENCES students (student_id),
+    FOREING KEY (course_id) REFERENCES course(course_id)
+  )
+```
+
+**03 唯一约束（UNIQUE）**
+
+```bash
+  # username 和 email 列都有唯一约束，确保不会有重复的用户名和电子邮箱
+  CREATE TABLE users (
+    user_id INT AUTO_INCRMENT,
+    username VARCHAR(50),
+    email VARCHAR(100),
+    PRIMARY KEY (user_id),
+    UNIQUE(username),
+    UNIQUE(email)
+  )
+```
+
+**04 非空约束（NOT NULL）**
+
+```bash
+  # name 和 price 列都不允许空值
+  CREATE TABLE products(
+    product_id INT AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    PRIMARY KEY (product_id)
+  )
+```
+
+**05 默认值（DEFAUTL）**
+
+```bash
+  CREATE TABLE articles(
+    article_id INT AUTO_INCREMENT,
+    title VARCHAR(200) NOT NULL,
+    content TEXT,
+    status VARCHAR(50) DEFAULT 'draft',
+    PRIMARY KEY(article_id)
+  )
+```
+
+这些约束在数据库设计中非常重要，因为通过他们帮助维护数据的一致性、准确性和可靠性。正确使用这些约束可以大大提高数据库的整体质量和性能。
