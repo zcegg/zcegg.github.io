@@ -14,3 +14,4 @@
 * 数据库
   * [MySQL](/DataBase/)
     * [MySQL基础](/DataBase/MySQL/Foundation/)
+    * [MySQL高级特性](/DataBase/MySQL/AdvancedFeature/)
