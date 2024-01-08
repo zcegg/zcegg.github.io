@@ -276,3 +276,99 @@ server.listen(3000)
 1. 确保响应的 `Content-Type` 和实际返回的数据类型相匹配
 2. 在实际的应用开发中，依据不同的URL路径或请求类型（GET、POST）返回不同类型的数据是很常见的方法，我们可以使用条件语句来实现这种逻辑
 3. 对于更复杂的应用，我们应该采用 web 框架来简化路由和响应处理
+
+## 动态渲染
+
+当前示例采用 EJS（Embedded JavaScript templating）作为模板引擎来完成渲染，实际生产中，我们还是推荐使用成熟的 web 框架来完成。
+
+**1 安装EJS**
+
+首先，我们需要确保已经安装了 `ejs`。如果没有，可以通过 npm 安装
+
+```bash
+npm install ejs
+```
+
+**2 目录结构**
+
+假设我们当前的目录结构如下，其中，`views` 文件夹存放 EJS 模板文件，`server.js` 是启动服务器的主文件。
+
+```bash
+- project
+  - views
+    - layout.ejs
+    - index.ejs
+  - server.js
+```
+
+**示例代码**
+1. server.js 文件
+
+```javascript
+const http = require('http')
+const ejs = require('ejs')
+const fs = require('fs')
+const path = require('path')
+
+const server = http.createServer((req, res) => {
+  // 读取 index.ejs 文件
+  const indexPath = path.join(__dirname, 'views', 'index.ejs')
+  const indexContent = fs.readFileSync(indexPath, 'utf-8')
+
+  // 将数据传递给模板并渲染
+  const renderHtml = ejs.render(indexContent, {title: 'Hello EJS'})
+
+  // 响应数据
+  res.writeHead(200, {'Content-Type': 'text/html'})
+  res.end(renderHtml)
+})
+
+server.listen(3000, () => {
+  console.log('Server is running on http://localhost:3000');
+})
+```
+
+2. views/layout.js
+
+这是一个基本布局文件，我们可以在这里定义 HTML 结构的共通部分。
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+      <title><%= title %></title>
+  </head>
+  <body>
+      <%- body %>
+  </body>
+</html> 
+```
+
+3. views/index.ejs
+
+这是具体页面的模板文件
+
+```html
+<% include layout.ejs %>
+<% 
+  // 把 layout.ejs 的 body 替换成下面的内容
+  body = `
+    <h1>Welcome to EJS</h1>
+    <p>This is a dynamic page rendered with EJS.</p>
+  `;
+%>
+```
+
+**说明**
+
+- 在 `server.js`中，我们使用 `ejs.render` 方法渲染 `index.ejs`模板，并传递一些数据（例如标题）给模板。
+- 在 `layout.ejs` 中，我们定义了网页的基本结构。这个文件可以被多个页面共用，以保持网站布局的一致性。
+- 在 `index.ejs` 中，我们通过 `<% include layout.ejs %>` 包含基本布局，并定义了此特定页面的内容
+- 使用 `fs.readFileSync` 读取模板文件。在实际生产环境中，可能会用到更高级的方法来处理文件读取，比如异步读取或使用 Web框架提供的特性。
+
+**注意**
+
+- 在大型项目中，通常会结合使用 Web 框架（如 Express.js）和模板引擎（如 EJS）。Express.js 等框架提供了更方便的方法来渲染模板
+- 在实际应用中，为了更好地处理路由和中间件，通常会使用 Express.js 或其它类似的框架。
+
+
