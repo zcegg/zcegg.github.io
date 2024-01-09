@@ -41,7 +41,7 @@ Express.js 是一个基于 Node.js 平台的极简而灵活的 Web 应用框架�
 **数据集成**
 - 数据库集成：与各种数据库（如 MongoDB、MySQL）集成，便于数据存储和检索。
 
-## Express 基本使用
+## 基本使用
 
 Express 是一个灵活的 Node.js Web 应用框架，用于构建各种 Web 应用和API。它简化了路由、中间件的使用，使得开发过程更快捷、高效。
 
@@ -80,9 +80,127 @@ app.get('/', (req, res) => {
 ```
 
 3. 启动服务器
+
+让应用监听指定端口上的 HTTP 请求
+
+```javascript
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`服务在 ${PORT}上运行`)
+})
+```
+
 4. 使用中间件
+
+Express 的强大功能之一是使用中间件来处理请求和响应，这里包括框架自带的中间件、自定义中间件、第三方中间件，后续会单独说明
+
+```javascript
+// 使用内置的  express.json() 和 express.urlencoded 来解析 JSON 和 URL 编码的请求体
+
+app.use(express.json())
+app.use(express.urlencoded({extended: true}))
+```
+
+```javascript
+// 创建并使用自定义中间件来处理请求
+app.use((req, res, next) => {
+  console.log('中间件')
+  next() // 调用 next 继续到下一个中间件、路由处理器
+})
+```
+
 5. 结合模板引擎
+
+Express 允许我们结合使用模板引擎来生成动态 HTML
+
+```javascript
+// 1 设置视图引擎，例如 EJS
+app.set('view engine', 'ejs')
+// 2 渲染视图：在路由处理器中渲染 EJS 文件
+app.get('/', (req, res) => {
+  res.render('index', {title: 'Express'})
+})
+```
+
 6. 处理静态文件
 
+Express 可以方便地托管静态文修的，例如样式表、脚本和图片。将静态资源放在项目的 `public` 目录下，Express 会自动提供对它们的访问。
+
+```javascript
+app.use(express.static('public'))
+```
+7. 组合使用
+
+```javascript
+const express = require('express')
+
+const app = new express()
+
+// 使用中间件
+app.use(express.json()) // 告诉 exprss 它现在能处理 json 格式的请求体
+app.use(express.urlencoded({ extended: true })) // 告诉 express 可以使用第三方插件处理 post 请求体
+
+// 处理静态文件：public 目录下的静态资源可以直接访问
+// app.use(express.static('public'))
+
+// 路由
+app.get('/', (req, res, next) => {
+  // 这里本身也是一个中间件
+  console.log(req.query, '<----query')
+  res.end('express基本使用')
+})
+
+// 监听端口
+const PORT = process.env.port || 3001
+
+app.listen(PORT, () => {
+  console.log(`服务运行在 http://localhost:${PORT}`)
+})
+
+```
 
 ### Express 脚手架使用
+
+我们除了使用 npm 来安装 express.js 之外，还可以你使用官方脚手架工具：`express-genderator`。这个工具可以帮助我们快速搭建一个基本的 Express 应用结构。节省了手动创建文件和目录的时间。`express-generator` 提供了一些预设的目录结构和文件，这对于快速开始一个新项目是非常有用的。
+
+**01 安装 `express-generator`**
+
+通过npm 执行全局的安装
+
+```bash
+npm install -g express-generator
+```
+
+**02 使用 `express-generator`**
+
+创建一个新的 Express 应用
+
+```bash
+express myapp
+```
+
+执行上述的命令之后会在当前目录下创建一个名为 `myApp` 的新目录。其中包含 Express 应用的初始结构。
+
+- bin：包含可执行文件，用于启动应用
+- pubulic：用于存放静态文修的，如样式表、脚本和图片
+- rutes：用于存放路由文件
+- views：用于存放模板文件（如果使用了模板引擎）
+- app.js：应用的主文件
+
+## 静态网页资源处理
+
+### satic 中间件使用
+
+`express.static` 中间件用于提供静态文件，如图片、CSS、JavaScript 文件等。它通过简单的配置，能够高效地为应用提供静态文件服务，同时还提供了多种选项用于定制行为。例如 缓存控制、路径处理等。
+
+**语法**
+
+```javascript
+express.static(root, [options])
+```
+- root：必需参数，用于指定提供静态资源的目录。
+- options：可选参数，用于改变中间件的行为。
+  - maxAge：设置 http 缓存头的最大过期时间（以毫秒为单位）
+  - index：指定索引文件，默认值为 `inex.html`
+  - redirect：
+  - setHeaders：
