@@ -189,7 +189,7 @@ express myapp
 
 ## 静态网页资源处理
 
-### satic 中间件使用
+### static 中间件使用
 
 `express.static` 中间件用于提供静态文件，如图片、CSS、JavaScript 文件等。它通过简单的配置，能够高效地为应用提供静态文件服务，同时还提供了多种选项用于定制行为。例如 缓存控制、路径处理等。
 
@@ -201,6 +201,38 @@ express.static(root, [options])
 - root：必需参数，用于指定提供静态资源的目录。
 - options：可选参数，用于改变中间件的行为。
   - maxAge：设置 http 缓存头的最大过期时间（以毫秒为单位）
-  - index：指定索引文件，默认值为 `inex.html`
-  - redirect：
-  - setHeaders：
+  - index：指定索引文件，默认值为 `inex.html`。
+  - redirect：当路径为目录时，是否自动重定向到以斜线结尾的路径，默认为 `true`
+  - setHeaders：函数，用于设置响应的头部
+
+**示例**
+
+下面是一个基础的 Express 应用实例，它设置了一个静态文件目录，并启动了一个 HTTP 服务器。
+
+```javascript
+const express = require('express')
+const app = express()
+
+// 设置静态文件目录为 'public'
+app.use(express.static('public'))
+
+// 可选：使用自定义设置
+app.use(express.static('public'), {
+  maxAge: '1d', // 缓存期限为一天
+  index: false
+})
+
+const PORT = 3000
+app.listen(PORT, () => {
+  console.log(`服务运行在 http://localhost:${PORT}`)
+})
+
+```
+
+**说明**
+
+1. **路径解析**：默认情况下，`express.static` 中间件不处理 URL 编码，这意味着对于编码的 URL 路径，我们可能需要额外的处理逻辑
+2. **安全性**：为了安全起见，建议明确指定提供静态资源的目录，避免使用相对路径或者父目录路径，因为这可能导会导致敏感文件的泄露
+3. **性能优化**：对于生产环境，应该考虑设置适当的 `maxAge` 来利用浏览器缓存，减少重复资源的下载
+4. **内容类型**：`express.static` 自动依据扩展名确定 `Content-Type`。确保静态资源的文件名正确，以便正确地设置 `MIME` 类型
+5. **虚似路径前缀**：如果需要，可以为静态资源指定虚拟路径前缀，这个前缀实际上并不对应文件系统中的路径。
