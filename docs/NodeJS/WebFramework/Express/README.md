@@ -187,7 +187,7 @@ express myapp
 - views：用于存放模板文件（如果使用了模板引擎）
 - app.js：应用的主文件
 
-## 静态网页资源处理
+## 处理静态网页
 
 ### static 中间件使用
 
@@ -236,3 +236,192 @@ app.listen(PORT, () => {
 3. **性能优化**：对于生产环境，应该考虑设置适当的 `maxAge` 来利用浏览器缓存，减少重复资源的下载
 4. **内容类型**：`express.static` 自动依据扩展名确定 `Content-Type`。确保静态资源的文件名正确，以便正确地设置 `MIME` 类型
 5. **虚似路径前缀**：如果需要，可以为静态资源指定虚拟路径前缀，这个前缀实际上并不对应文件系统中的路径。
+
+## 处理动态网页
+
+在 Express 框架下处理动态网页通常涉及使用模板引擎来动态生成 HTML 内容。 Express 支持多种模板引擎，如 EJS、Pug（之前称为 Jdge）、Handlebars 等。使用模板引擎可以在服务器端动态插入数据到 HTML 文件中，然后发送这个生成的 HTML 响应给客户端。
+
+使用模板引擎在 Express 中处理动态网页是一种常见且强大的做法。它允许我们将数据和 HTML 模板结合起来，生成动态网页内容。选择合适的模板引擎，并理解它的基本语法和使用方式，对于创建动态网页至关重要。通过这种方式，我们可以构建更加丰富和交互性强的 Web 应用。
+
+### 安装模板引擎
+> 这里以 EJS 为例，使用 npm 安装 
+
+```bash
+npm install ejs
+```
+
+### 设置引擎
+> 在你的 Express 应用中设置模板引擎
+
+```javascript
+app.set('view engine', 'ejs')
+```
+
+### 创建视图文件
+
+创建一个 EJS 视图文件。例如，创建一个 `index.ejs` 文件
+
+### 渲染视图
+
+使用 `res.render` 函数渲染视图。这个函数接受视图的名称和一个数据对象，数据对象的属性可以在视图中使用
+
+### 示例代码
+
+假设我们有一个简单的 Express 应用，我们想用 EJS 模板引擎渲染一个动态网页。
+
+**01 app.js**
+
+```javascript
+const express = require('express')
+const path = require('path')
+
+// 创建实例
+
+const app = express()
+
+// 设置动态资源的目录，默认会查找根目录下的 views
+app.set('views engine', path.join(__dirname, 'views'))
+
+// 告诉 Express 采用是哪种模板引擎
+app.set('view engine', 'ejs')
+
+// 监听不同类型下的不同路径的请求，返回渲染后的动态界面
+app.get('/', (req, res) => {
+  res.render('index', { title: 'Jude 的网站' })
+})
+
+// 设置端口号
+const PORT = 3307
+app.listen(PORT, () => {
+  console.log('服务开启了')
+})
+```
+
+**02 views/index.ejs**
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+</head>
+<body>
+    <h1><%= title %></h1>
+    <p>EJS渲染的动态网页</p>
+</body>
+</html>
+```
+**注意**
+
+- 模板引擎配置：`app.set('view engine', 'ejs')` 告诉 Express 应用使用 EJS 作为模板引擎
+- 视图目录：默认情况下， Express 会在项目的 `views` 目录下查找模板文件。
+- 数据传递：在 `res.render()` 方法中，我们可以传递一个对象，它的属性在模板中作为变量使用。在上面的代码中，`title` 属性在 `index.ejs` 文件中被使用
+- 模板语法：EJS使用 `<%= %>` 来输出变量的值，其它模板引擎可能有不同的语法
+
+## 路由处理方式
+
+在 Express 中，我们可以通过多种方式来处理路由，包括使用应用实例方法、`Router` 类、路由参数、中间件、以及链式路由处理。这些方式提供了强大的灵活性和控制力，使得我们可以依据不同的需要灵活地定义和管理我们的应用中由。这对于构建结构清晰、易于维护的 Express 应用至关重要。
+
+### 应用实例方法
+
+Express 的应用实例（通过 `express()`创建）提供了一系列方法来定义路由，对应于 HTTP 的各种请求方法（如 GET、POST、PUT、DELETE等）。
+
+**语法和示例**
+
+```javascript
+const express = require('express')
+const app = express()
+
+// 处理 GET 请求
+app.get('/path', (req, res) => {
+  res.send('GET 请求')
+})
+
+// 处理 POST 请求
+app.post('/post', (req, res) => {
+  res.send('POST 请求')
+})
+
+const PORT = 3307
+app.listen(PORT, () => {
+  console.log('服务开启了')
+})
+```
+
+### Router 类
+
+使用 `express.Router` 类可以创建模块化的路由处理器。这种方式使得路由更加灵活，易于维护，特别适用于大型应用。
+
+**语法示例**
+
+```javascript
+const express = require('express')
+const router = express.Router()
+
+// 定义路由
+router.get('/', (req, res) => {
+  res.send('Home Page')
+})
+
+router.get('/about', (req, res) => {
+  res.send('About Page')
+})
+
+// 使用路由
+const app = express()
+app.use('/', router)
+
+const PORT = 3307
+app.listen(PORT)
+```
+
+### 路由参数
+
+路由参数用于捕获 URL 中的动态值 。它们通常用于依据 URL 中的某个部分来获取数据。
+
+**语法示例**
+
+```javascript
+app.get('/user/:userId', (req, res) => {
+  const userId = req.params.userId
+  res.send(`User ID is ${userId}`)
+})
+```
+
+### 路由中间件
+
+在 Express 中，我们可以为路由指定一个或者多个中间件函数，这些函数可以执行任何代码、修改请求和响应对象、结束请求-响应循环，或调用堆栈中的下一个中间件。
+
+**语法和示例**
+
+```javascript
+// 中间件函数
+const logMiddleware = (req, res, next) => {
+  console.log('请求捕获到了')
+  next() // 调用下一个中间件/路由处理器
+}
+
+// 应用中间件于特定路由
+app.get('/somepath', logMiddleware, (req, res) => {
+  res.send('处理somepath 的响应')
+})
+```
+
+### 链式路由
+
+Express 允许我们以链式的方式对同一个路径使用多个处理器
+
+**语法和示例**
+
+```javascript
+app.route('/book')
+  .get((req, res) => {
+    res.send('查询 book')
+  })
+  .post((req, res) => {
+    res.send('添加book')
+  })
+  .put((req, res) => {
+    res.send('更新 book')
+  })
+```
