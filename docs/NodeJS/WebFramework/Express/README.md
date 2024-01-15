@@ -425,3 +425,81 @@ app.route('/book')
     res.send('更新 book')
   })
 ```
+
+## 路由模块化
+
+在实际的 Express 应用，路由处理通常遵循模块化和可维护的原则。这意味着优先考虑使用 `express.Router` 来创建可组合的路由处理器。这种方式有助于将路由相关的处理逻辑组织在一起，使得代码更加清晰和易于管理。
+
+### `express.Router` 模块化
+
+将相关的路由处理逻辑组织到单独的模块中，每个模块使用 `express.Router`实例
+
+假设我们有一个博客应用，那么我们可以将与用户相关的路由放在一个模块中，将与文章相关的路由放在另一个模块中。
+
+**01 用户路由模块（`users.js`）**
+```javascript
+const express = require('express')
+const router = express.router()
+
+router.get('/', (req, res) => {
+  res.send('User list')
+})
+
+router.post('/', (req, res) => {
+  res.send('创建一个新的用户')
+})
+
+// 当前模块中就包含了所有与 user 相关的路由处理
+module.exports = router
+
+```
+
+**02 文章路由模块（`posts.js`）**
+
+```javascript
+const express = require('express')
+const router = express.Router()
+
+router.get('/', (req, res) => {
+  res.send('List of blog posts')
+})
+
+router.post('/', (req, res) => {
+  res.send('Create a new blog post')
+})
+
+module.exports = router
+```
+
+**03 主应用文件（`app.js`）**
+
+```javascript
+const express = require('express')
+const router = express.Router()
+
+// 引入不同的路由处理模块
+const usersRouter = require('./users')
+const postsRouter = require('./posts')
+
+// 采用中间件的方式让不同路由生效
+app.use('/users', usersRouter)
+app.use('/posts', postsRouter)
+
+// 设置端口信息
+const PORT = 3307
+app.listen(PORT, () => {
+  console.log(`当前服务运行在http://localhost:${PORT}`)
+})
+```
+
+### RESTful API 原则
+
+在设计 API 时，遵循 RESTful 设计原则可以让我们的 API 更加直观和易于理解。这意味着使用 HTTP 方法（如 GET POST PUT DELETE）和路径来表达操作意图。
+
+### 中间件预处理
+
+使用中间件来处理跨多个路由的通用逻辑，如验证、日志记录等。
+
+### 错误处理
+
+为路由提供统一的错误处理逻辑，以便于管理异常和提供一致的错误响应
